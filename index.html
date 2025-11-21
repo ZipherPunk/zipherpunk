@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZipherPunk - Zclassic Privacy Advocacy</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Chicago&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #808080;
+            font-family: 'Chicago', 'Geneva', 'Monaco', monospace;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .window {
+            background: #ffffff;
+            border: 2px solid #000;
+            box-shadow: 2px 2px 0 #000;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .title-bar {
+            background: linear-gradient(to right, #000 0%, #000 100%);
+            background: repeating-linear-gradient(
+                90deg,
+                #000 0px,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #000;
+        }
+
+        .close-box {
+            width: 12px;
+            height: 12px;
+            border: 1px solid #000;
+            background: #fff;
+            margin-right: 8px;
+        }
+
+        .title {
+            background: #fff;
+            padding: 2px 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 20px;
+            background: #fff;
+        }
+
+        .menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #000;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .menu-bar span {
+            margin-right: 16px;
+            cursor: pointer;
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            text-decoration: underline;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin: 16px 0 8px 0;
+            border-bottom: 1px dotted #000;
+            padding-bottom: 4px;
+        }
+
+        h3 {
+            font-size: 14px;
+            margin: 12px 0 6px 0;
+        }
+
+        p {
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .manifesto {
+            border: 2px inset #808080;
+            padding: 12px;
+            margin: 16px 0;
+            background: #f0f0f0;
+        }
+
+        .manifesto p {
+            font-style: italic;
+            text-align: center;
+        }
+
+        .stats-box {
+            border: 2px groove #808080;
+            padding: 12px;
+            margin: 16px 0;
+            background: #e8e8e8;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #000;
+            background: #fff;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        .wallet-section {
+            border: 2px solid #000;
+            margin: 16px 0;
+            padding: 12px;
+        }
+
+        .wallet-header {
+            background: #000;
+            color: #fff;
+            padding: 4px 8px;
+            margin: -12px -12px 12px -12px;
+            font-size: 14px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            font-size: 11px;
+            padding: 4px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+        }
+
+        .button {
+            display: inline-block;
+            background: #fff;
+            border: 2px outset #808080;
+            padding: 6px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #000;
+            margin: 4px;
+        }
+
+        .button:active {
+            border-style: inset;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #000;
+            font-size: 10px;
+        }
+
+        .icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .principles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .principle {
+            text-align: center;
+            padding: 12px;
+            border: 1px solid #000;
+        }
+
+        .loading {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
+
+        .scroll-box {
+            border: 2px inset #808080;
+            padding: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            background: #fff;
+        }
+
+        .download-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .principles {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="window">
+        <div class="title-bar">
+            <div class="close-box"></div>
+            <span class="title">ZipherPunk.com - Privacy is Not a Crime</span>
+        </div>
+        <div class="menu-bar">
+            <span>File</span>
+            <span>Edit</span>
+            <span>View</span>
+            <span>Special</span>
+        </div>
+        <div class="content">
+            <h1>⌘ ZIPHERPUNK ⌘</h1>
+
+            <div class="manifesto">
+                <p>"Privacy is necessary for an open society in the electronic age."</p>
+                <p>— Cypherpunk Manifesto, 1993</p>
+            </div>
+
+            <div class="principles">
+                <div class="principle">
+                    <div class="icon">🔒</div>
+                    <h3>PRIVACY</h3>
+                    <p style="font-size: 10px;">Your transactions. Your business.</p>
+                </div>
+                <div class="principle">
+                    <div class="icon">⚡</div>
+                    <h3>FREEDOM</h3>
+                    <p style="font-size: 10px;">No permission needed. No borders.</p>
+                </div>
+                <div class="principle">
+                    <div class="icon">🌐</div>
+                    <h3>DECENTRALIZATION</h3>
+                    <p style="font-size: 10px;">No single point of failure.</p>
+                </div>
+            </div>
+
+            <h2>▸ Zclassic Network Stats</h2>
+            <div class="stats-box">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Block Height</div>
+                        <div class="stat-value" id="block-height">1,847,523</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">ZCL Price</div>
+                        <div class="stat-value loading" id="zcl-price">loading</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Version</div>
+                        <div class="stat-value" id="version">v2.1.0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Circulating</div>
+                        <div class="stat-value loading" id="circulating" style="font-size: 12px;">loading</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>▸ ZIPHER - Full Node Desktop Wallet</h2>
+            <div class="wallet-section">
+                <div class="wallet-header">◈ Desktop Sovereignty</div>
+                <p>Run your own full node. Verify everything. Trust no one.</p>
+                <ul class="feature-list">
+                    <li><strong>Full Node:</strong> Complete blockchain verification - be your own bank</li>
+                    <li><strong>Shielded Transactions:</strong> zk-SNARKs privacy with z-addresses</li>
+                    <li><strong>Transaction History:</strong> Complete audit trail</li>
+                    <li><strong>Memo Field:</strong> Encrypted messages in shielded txs</li>
+                    <li><strong>Multi-platform:</strong> Windows, macOS, Linux</li>
+                    <li><strong>Import/Export:</strong> Private key management</li>
+                    <li><strong>Network Stats:</strong> Real-time blockchain info</li>
+                    <li><strong>In-wallet Explorer:</strong> Browse blockchain directly</li>
+                    <li><strong>Open Source:</strong> Audit the code yourself</li>
+                </ul>
+                <div class="download-section">
+                    <a href="#" class="button download-btn" onclick="showCooking(event)">Download Zipher</a>
+                </div>
+            </div>
+
+            <!-- ZIPHERX Mobile Wallet - Coming Soon
+            <h2>▸ ZIPHERX - Mobile Wallet</h2>
+            <div class="wallet-section">
+                <div class="wallet-header">◈ Privacy On The Go</div>
+                <p>Your keys in your pocket. Freedom anywhere.</p>
+                <ul class="feature-list">
+                    <li><strong>Light Client:</strong> No full node required - instant setup</li>
+                    <li><strong>Shielded Support:</strong> Full z-address privacy on mobile</li>
+                    <li><strong>QR Scanner:</strong> Quick address scanning</li>
+                    <li><strong>Biometric Lock:</strong> Fingerprint/Face authentication</li>
+                    <li><strong>Contact Management:</strong> Save frequent addresses</li>
+                    <li><strong>Push Notifications:</strong> Instant tx alerts</li>
+                    <li><strong>Backup/Restore:</strong> Seed phrase recovery</li>
+                    <li><strong>Open Source:</strong> Audit the code yourself</li>
+                </ul>
+                <div class="download-section">
+                    <a href="#" class="button download-btn" onclick="showCooking(event)">Download ZipherX</a>
+                </div>
+            </div>
+            -->
+
+            <h2>▸ Why Zclassic?</h2>
+            <div class="scroll-box">
+                <p><strong>No Founder's Reward.</strong> 100% of block rewards go to miners. No dev tax. No corporate interests.</p>
+                <p><strong>True Privacy.</strong> zk-SNARKs zero-knowledge proofs. Shielded transactions hide sender, receiver, and amount.</p>
+                <p><strong>Decentralized.</strong> No company. No foundation. Community-driven development.</p>
+                <p><strong>Battle-tested.</strong> Based on Zcash protocol. Years of cryptographic research.</p>
+                <p><strong>Censorship Resistant.</strong> No one can stop your transaction. No one can freeze your funds.</p>
+            </div>
+
+            <div class="footer">
+                <p>ZipherPunk.com — Supporting Privacy Since Day One</p>
+                <p>Zclassic (ZCL) • DYOR • Not Financial Advice</p>
+                <p style="margin-top: 8px;">[ <a href="https://zclassic.org">zclassic.org</a> | <a href="https://github.com/nickmmark/zipher">GitHub</a> ]</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for "Coming Soon" -->
+    <div id="cooking-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="window" style="max-width: 400px; margin: 20px;">
+            <div class="title-bar">
+                <div class="close-box" onclick="closeModal()" style="cursor: pointer;"></div>
+                <span class="title">Coming Soon</span>
+            </div>
+            <div class="content" style="text-align: center; padding: 30px;">
+                <div style="font-size: 48px; margin-bottom: 16px;">🔥</div>
+                <p style="font-size: 14px; font-weight: bold; margin-bottom: 12px;">Be patient, we are cooking...</p>
+                <p style="font-size: 11px;">Something powerful is brewing.<br>Privacy takes time to perfect.</p>
+                <button class="button" onclick="closeModal()" style="margin-top: 16px;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showCooking(event) {
+            event.preventDefault();
+            document.getElementById('cooking-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('cooking-modal').style.display = 'none';
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Close modal on background click
+        document.getElementById('cooking-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Retry state
+        let supplyLoaded = false;
+        let priceLoaded = false;
+        let retryCount = 0;
+
+        // Fetch price and supply from CoinGecko
+        async function fetchStats() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/coins/zclassic?localization=false&tickers=false&community_data=false&developer_data=false');
+                const data = await response.json();
+
+                // Update price
+                if (data.market_data && data.market_data.current_price && data.market_data.current_price.usd) {
+                    document.getElementById('zcl-price').textContent = '$' + data.market_data.current_price.usd.toFixed(4);
+                    document.getElementById('zcl-price').classList.remove('loading');
+                    priceLoaded = true;
+                }
+
+                // Update circulating supply
+                if (data.market_data && data.market_data.circulating_supply) {
+                    const circulating = Math.floor(data.market_data.circulating_supply).toLocaleString();
+                    document.getElementById('circulating').textContent = circulating + ' ZCL';
+                    document.getElementById('circulating').classList.remove('loading');
+                    supplyLoaded = true;
+                }
+            } catch (error) {
+                console.error('Error fetching data from CoinGecko:', error);
+            }
+        }
+
+        // Retry logic with progressive delays
+        async function retryFetch() {
+            await fetchStats();
+
+            if (supplyLoaded && priceLoaded) {
+                // Success - switch to 10 minute refresh
+                setInterval(fetchStats, 600000);
+                return;
+            }
+
+            retryCount++;
+            let delay;
+
+            if (retryCount <= 10) {
+                // First 10 retries: every 5 seconds
+                delay = 5000;
+            } else if (retryCount <= 20) {
+                // Next 10 retries: every 30 seconds
+                delay = 30000;
+            } else {
+                // After that: every minute
+                delay = 60000;
+            }
+
+            setTimeout(retryFetch, delay);
+        }
+
+        // Load stats on page load
+        document.addEventListener('DOMContentLoaded', retryFetch);
+    </script>
+</body>
+</html>
