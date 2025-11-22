@@ -291,7 +291,7 @@
                 <div class="stats-grid">
                     <div class="stat-item">
                         <div class="stat-label">Block Height</div>
-                        <div class="stat-value" id="block-height">1,847,523</div>
+                        <div class="stat-value loading" id="block-height">loading</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-label">ZCL Price</div>
@@ -405,7 +405,24 @@
         // Retry state
         let supplyLoaded = false;
         let priceLoaded = false;
+        let blockHeightLoaded = false;
         let retryCount = 0;
+
+        // Fetch block height from Zelcore explorer
+        async function fetchBlockHeight() {
+            try {
+                const response = await fetch('https://explorer.zcl.zelcore.io/api/sync');
+                const data = await response.json();
+
+                if (data.height) {
+                    document.getElementById('block-height').textContent = data.height.toLocaleString();
+                    document.getElementById('block-height').classList.remove('loading');
+                    blockHeightLoaded = true;
+                }
+            } catch (error) {
+                console.error('Error fetching block height:', error);
+            }
+        }
 
         // Fetch price and supply from CoinGecko
         async function fetchStats() {
@@ -434,11 +451,14 @@
 
         // Retry logic with progressive delays
         async function retryFetch() {
-            await fetchStats();
+            await Promise.all([fetchStats(), fetchBlockHeight()]);
 
-            if (supplyLoaded && priceLoaded) {
+            if (supplyLoaded && priceLoaded && blockHeightLoaded) {
                 // Success - switch to 10 minute refresh
-                setInterval(fetchStats, 600000);
+                setInterval(() => {
+                    fetchStats();
+                    fetchBlockHeight();
+                }, 600000);
                 return;
             }
 
