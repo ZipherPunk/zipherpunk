@@ -482,6 +482,18 @@
                 <h3>BIOMETRIC AUTH</h3>
                 <p>Face ID / Touch ID. 30-second auto-lock. Passcode fallback. Field-level database encryption.</p>
             </div>
+
+            <div class="feature">
+                <div class="icon">💬</div>
+                <h3>CYPHERPUNK CHAT</h3>
+                <p>P2P encrypted messaging over Tor. X25519 + ChaChaPoly. Payment requests in-chat. Read receipts. Offline queue.</p>
+            </div>
+
+            <div class="feature">
+                <div class="icon">💸</div>
+                <h3>PAY IN CHAT</h3>
+                <p>Request and send ZCL within conversations. One-tap payment. TX confirmation receipts. No copy-paste addresses.</p>
+            </div>
         </div>
 
         <div class="comparison">
@@ -607,7 +619,19 @@
                 </tr>
                 <tr>
                     <td>PoW Verification</td>
-                    <td>Equihash(200,9) full validation</td>
+                    <td>Equihash(192,7) full validation (post-Bubbles)</td>
+                </tr>
+                <tr>
+                    <td>Chat Encryption</td>
+                    <td>X25519 key exchange + ChaChaPoly (AEAD)</td>
+                </tr>
+                <tr>
+                    <td>Chat Port</td>
+                    <td>8034 (via Tor hidden service)</td>
+                </tr>
+                <tr>
+                    <td>Chat Features</td>
+                    <td>Payment requests, read receipts, offline queue, TTL</td>
                 </tr>
             </table>
         </div>
