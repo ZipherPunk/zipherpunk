@@ -412,13 +412,17 @@
             <h2>> WHAT IS THIS?</h2>
             <p>
                 ZipherX is a <strong>shielded-only</strong> cryptocurrency wallet for Zclassic (ZCL).
-                No transparent addresses. No address reuse. No blockchain analytics.
+                No transparent addresses. No trusted servers. No blockchain analytics.
                 Just pure, unadulterated financial privacy.
             </p>
             <p>
-                Built for iOS with the paranoid in mind. Your keys never leave your device.
-                Your transactions are hidden behind zero-knowledge proofs.
+                Built for iOS and macOS with the paranoid in mind. Your keys live in the Secure Enclave.
+                Your proofs are generated locally. Your transactions are verified by 8+ peers with Byzantine consensus.
                 Your balance is nobody's business but yours.
+            </p>
+            <p>
+                <strong>Swift + Rust.</strong> librustzcash for Sapling cryptography. Arti for embedded Tor.
+                SQLCipher for encrypted storage. AES-256-GCM for field-level encryption.
             </p>
         </div>
 
@@ -434,37 +438,49 @@
             <div class="feature">
                 <div class="icon">🛡️</div>
                 <h3>SHIELDED ONLY</h3>
-                <p>t-addresses? Never heard of them. We only speak z-address here. Full shielded, all the time.</p>
+                <p>t-addresses? Never heard of them. z-to-z only. Sapling proofs. Zero transparent leaks.</p>
             </div>
 
             <div class="feature">
                 <div class="icon">🔐</div>
-                <h3>YOUR KEYS</h3>
-                <p>24-word seed phrase. Write it down. Hide it. Tattoo it backwards if you must. We never see it.</p>
+                <h3>SECURE ENCLAVE</h3>
+                <p>Your spending key lives in hardware. AES-256-GCM encryption. Keys never extracted to Swift memory.</p>
             </div>
 
             <div class="feature">
                 <div class="icon">📱</div>
-                <h3>MOBILE FIRST</h3>
-                <p>Privacy on the go. Because surveillance doesn't take weekends off.</p>
+                <h3>iOS + macOS</h3>
+                <p>iOS 15+ with Face ID. macOS 12+ with embedded zclassicd. Same codebase. Same privacy.</p>
             </div>
 
             <div class="feature">
                 <div class="icon">⚡</div>
-                <h3>FAST SYNC</h3>
-                <p>Pre-built commitment tree. 1M+ notes indexed. Your balance appears before you can say "trusted setup".</p>
+                <h3>PARALLEL SCANNING</h3>
+                <p>Rayon-powered decryption. 6.7x faster note discovery. ~1M CMU commitment tree pre-indexed.</p>
             </div>
 
             <div class="feature">
                 <div class="icon">🔍</div>
-                <h3>VERIFY LOCALLY</h3>
-                <p>We don't trust servers. We verify proofs on-device. Satoshi would be proud.</p>
+                <h3>LOCAL PROOFS</h3>
+                <p>Sapling zk-SNARKs generated on-device. ~30 seconds. Proof verification in ~50ms. Trust math.</p>
             </div>
 
             <div class="feature">
                 <div class="icon">🌐</div>
-                <h3>DECENTRALIZED</h3>
-                <p>Connect to multiple peers. No single point of failure. No central server to subpoena.</p>
+                <h3>MULTI-PEER CONSENSUS</h3>
+                <p>8+ random peers. 5/8 Byzantine tolerance. 7-day auto-ban for malicious actors. No trusted server.</p>
+            </div>
+
+            <div class="feature">
+                <div class="icon">🧅</div>
+                <h3>EMBEDDED TOR</h3>
+                <p>Arti router built-in. SOCKS5 proxy. Persistent .onion hidden service. IP privacy by default.</p>
+            </div>
+
+            <div class="feature">
+                <div class="icon">🔒</div>
+                <h3>BIOMETRIC AUTH</h3>
+                <p>Face ID / Touch ID. 30-second auto-lock. Passcode fallback. Field-level database encryption.</p>
             </div>
         </div>
 
@@ -476,21 +492,21 @@
                     <ul>
                         <li>Transparent addresses enabled by default</li>
                         <li>Lightwalletd dependency (trusted server)</li>
-                        <li>Sync takes forever on mobile</li>
-                        <li>Complex UI with 47 settings panels</li>
-                        <li>"We'll add shielded-by-default... eventually"</li>
-                        <li>Requires PhD to send a transaction</li>
+                        <li>Single server = single point of failure</li>
+                        <li>Keys in software-only storage</li>
+                        <li>Server generates your proofs</li>
+                        <li>IP address exposed to server</li>
                     </ul>
                 </div>
                 <div class="comparison-col">
                     <h3>ZIPHERX</h3>
                     <ul>
-                        <li>Shielded only. No exceptions.</li>
-                        <li>Direct P2P node connections</li>
-                        <li>Pre-indexed tree = instant balance</li>
-                        <li>One screen. Send. Receive. Done.</li>
-                        <li>Shielded-only since day one</li>
-                        <li>Your grandma could use it*</li>
+                        <li>Shielded only. z-to-z. No exceptions.</li>
+                        <li>Direct P2P with 8+ peers</li>
+                        <li>5/8 Byzantine consensus - no single trust</li>
+                        <li>Secure Enclave hardware protection</li>
+                        <li>Local Sapling proof generation</li>
+                        <li>Embedded Tor with .onion service</li>
                     </ul>
                 </div>
             </div>
@@ -519,35 +535,79 @@
             <table>
                 <tr>
                     <td>Cryptography</td>
-                    <td>Sapling (Groth16 proofs, BLS12-381)</td>
+                    <td>Sapling (Groth16 zk-SNARKs, BLS12-381)</td>
                 </tr>
                 <tr>
                     <td>Key Derivation</td>
-                    <td>ZIP-32 HD Wallets</td>
+                    <td>ZIP-32 HD Wallets (IVK, OVK, spending key)</td>
                 </tr>
                 <tr>
                     <td>Mnemonic</td>
-                    <td>BIP-39 (24 words)</td>
+                    <td>BIP-39 (24 words, PBKDF2-SHA512)</td>
+                </tr>
+                <tr>
+                    <td>Encryption</td>
+                    <td>AES-256-GCM (12-byte nonce, 16-byte tag)</td>
+                </tr>
+                <tr>
+                    <td>Database</td>
+                    <td>SQLCipher 4.5+ with field-level encryption</td>
                 </tr>
                 <tr>
                     <td>Network</td>
-                    <td>Zclassic mainnet (port 8033)</td>
+                    <td>Zclassic P2P mainnet (port 8033)</td>
                 </tr>
                 <tr>
                     <td>Consensus</td>
                     <td>Buttercup (branch ID: <span class="redacted">0x930b540d</span>)</td>
                 </tr>
                 <tr>
+                    <td>Sapling Activation</td>
+                    <td>Block 476,969</td>
+                </tr>
+                <tr>
+                    <td>Peer Consensus</td>
+                    <td>8+ peers, 5/8 Byzantine tolerance</td>
+                </tr>
+                <tr>
                     <td>Transaction Fee</td>
                     <td>0.0001 ZCL (10,000 zatoshis)</td>
                 </tr>
                 <tr>
+                    <td>Dust Threshold</td>
+                    <td>10,000 zatoshis minimum</td>
+                </tr>
+                <tr>
                     <td>Proof Time</td>
-                    <td>~3 seconds on iPhone</td>
+                    <td>~30 seconds on iPhone</td>
+                </tr>
+                <tr>
+                    <td>Proof Verification</td>
+                    <td>~50ms per proof (local)</td>
                 </tr>
                 <tr>
                     <td>Commitment Tree</td>
-                    <td><span class="redacted">1,041,688</span> notes indexed</td>
+                    <td>~1M CMUs pre-indexed (GitHub boost)</td>
+                </tr>
+                <tr>
+                    <td>Memo Size</td>
+                    <td>512 bytes encrypted per TX</td>
+                </tr>
+                <tr>
+                    <td>iOS Minimum</td>
+                    <td>iOS 15.0+ (Secure Enclave: iPhone 8+)</td>
+                </tr>
+                <tr>
+                    <td>macOS Minimum</td>
+                    <td>macOS 12.0+ (embedded zclassicd)</td>
+                </tr>
+                <tr>
+                    <td>Tor</td>
+                    <td>Arti (Rust) with .onion hidden service</td>
+                </tr>
+                <tr>
+                    <td>PoW Verification</td>
+                    <td>Equihash(200,9) full validation</td>
                 </tr>
             </table>
         </div>
@@ -556,18 +616,19 @@
             <h3>// A NOTE TO OUR FRIENDS AT ECC & ZASHI</h3>
             <p>
                 Hey team! 👋 Remember when you said mobile Sapling was "too complex"?
-                We took that personally. Turns out you just need to
-                <span class="redacted">believe in the math</span> and
-                maybe not route everything through a trusted server. Wild concept, right?
+                We took that personally. Built librustzcash FFI bindings in Swift.
+                Added Secure Enclave key storage. Embedded Tor via Arti.
+                <span class="redacted">No trusted server required.</span>
             </p>
             <p style="margin-top: 15px;">
-                Also, we found that Buttercup branch ID thing pretty quickly.
-                Might want to document that better. Just saying.
+                Multi-peer consensus? 8+ peers with 5/8 Byzantine tolerance.
+                Parallel note decryption? 6.7x faster with Rayon.
+                Field-level encryption? AES-256-GCM on every sensitive field.
                 <span style="color: #00ff41;">¯\_(ツ)_/¯</span>
             </p>
             <p class="hint">
-                P.S. - Our commitment tree loads faster than your lightwalletd syncs.
-                And we don't need AWS.
+                P.S. - Our ~1M CMU tree loads from GitHub boost files.
+                No lightwalletd. No AWS. Just P2P and math.
             </p>
         </div>
 
