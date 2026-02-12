@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZCL // QUANTUM THREAT MATRIX // CLASSIFIED</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Code:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+  :root {
+    --green: #00ff41;
+    --green-dim: #00cc33;
+    --green-dark: #009922;
+    --red: #ff0040;
+    --red-dim: #cc0033;
+    --amber: #ffaa00;
+    --amber-dim: #cc8800;
+    --cyan: #00ffff;
+    --cyan-dim: #00cccc;
+    --magenta: #ff00ff;
+    --bg: #0a0a0a;
+    --bg-panel: #0d0d0d;
+    --bg-card: #111111;
+    --border: #1a1a1a;
+    --text: #b0b0b0;
+    --text-dim: #666666;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Fira Code', 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* === SCANLINE OVERLAY === */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 65, 0.015) 2px,
+      rgba(0, 255, 65, 0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* === NOISE TEXTURE === */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.4;
+  }
+
+  /* === TOP BAR === */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 32px;
+    background: linear-gradient(90deg, #0a0a0a, #111, #0a0a0a);
+    border-bottom: 1px solid var(--green-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1000;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .topbar .left { color: var(--green-dim); }
+  .topbar .center { color: var(--red); animation: blink 1.5s infinite; }
+  .topbar .right { color: var(--text-dim); }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes flicker {
+    0% { opacity: 1; }
+    3% { opacity: 0.4; }
+    6% { opacity: 1; }
+    7% { opacity: 0.4; }
+    8% { opacity: 1; }
+    9% { opacity: 0.4; }
+    10% { opacity: 1; }
+    89% { opacity: 1; }
+    90% { opacity: 0.4; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+  }
+
+  @keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  @keyframes pulse-border {
+    0%, 100% { border-color: var(--green-dark); }
+    50% { border-color: var(--green); }
+  }
+
+  @keyframes scroll-data {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+
+  /* === MAIN CONTAINER === */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 52px 24px 80px;
+  }
+
+  /* === HERO HEADER === */
+  .hero {
+    text-align: center;
+    padding: 60px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '//////////////////////////////////////////////////////////////////////';
+    display: block;
+    color: var(--green-dark);
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+    opacity: 0.4;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .hero::after {
+    content: '//////////////////////////////////////////////////////////////////////';
+    display: block;
+    color: var(--green-dark);
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-top: 30px;
+    opacity: 0.4;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .hero h1 {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 42px;
+    font-weight: 400;
+    color: var(--green);
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(0,255,65,0.3), 0 0 40px rgba(0,255,65,0.1);
+    margin-bottom: 8px;
+  }
+
+  .hero .subtitle {
+    font-size: 14px;
+    color: var(--red);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero .meta {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    line-height: 2.2;
+  }
+
+  .hero .meta span.val {
+    color: var(--cyan-dim);
+  }
+
+  .classification-banner {
+    display: inline-block;
+    border: 1px solid var(--red);
+    padding: 4px 20px;
+    margin: 20px 0;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--red);
+    text-transform: uppercase;
+    animation: pulse-border 2s infinite;
+    animation-name: pulse-red;
+  }
+
+  @keyframes pulse-red {
+    0%, 100% { border-color: var(--red-dim); box-shadow: none; }
+    50% { border-color: var(--red); box-shadow: 0 0 10px rgba(255,0,64,0.2); }
+  }
+
+  /* === NAV SIDEBAR === */
+  .nav-index {
+    position: fixed;
+    left: 0;
+    top: 32px;
+    bottom: 0;
+    width: 40px;
+    background: var(--bg);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    gap: 12px;
+    z-index: 100;
+  }
+
+  .nav-index a {
+    display: block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--green-dark);
+    color: var(--green-dark);
+    font-size: 8px;
+    line-height: 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .nav-index a:hover {
+    border-color: var(--green);
+    color: var(--green);
+    box-shadow: 0 0 6px rgba(0,255,65,0.3);
+  }
+
+  /* === SECTIONS === */
+  .section {
+    margin-bottom: 50px;
+    position: relative;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--bg);
+    background: var(--green-dark);
+    padding: 2px 8px;
+    letter-spacing: 1px;
+    min-width: 32px;
+    text-align: center;
+  }
+
+  .section-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 18px;
+    color: var(--green);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  h3 {
+    color: var(--cyan);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 28px 0 14px;
+    padding-left: 12px;
+    border-left: 2px solid var(--cyan-dim);
+  }
+
+  h4 {
+    color: var(--amber);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    margin: 20px 0 10px;
+  }
+
+  p {
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  strong { color: #ddd; font-weight: 500; }
+
+  /* === CODE BLOCKS === */
+  .codeblock {
+    background: #080808;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green-dark);
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .codeblock::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    background: var(--green-dark);
+    color: var(--bg);
+    font-size: 9px;
+    padding: 1px 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .codeblock .comment { color: var(--text-dim); }
+  .codeblock .keyword { color: var(--magenta); }
+  .codeblock .type { color: var(--cyan); }
+  .codeblock .string { color: var(--green); }
+  .codeblock .number { color: var(--amber); }
+  .codeblock .danger { color: var(--red); }
+
+  /* === TABLES === */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 11px;
+  }
+
+  thead th {
+    background: #111;
+    color: var(--green);
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--green-dark);
+    font-size: 10px;
+  }
+
+  tbody td {
+    padding: 7px 12px;
+    border-bottom: 1px solid #1a1a1a;
+    vertical-align: top;
+  }
+
+  tbody tr:hover { background: rgba(0,255,65,0.02); }
+
+  /* === STATUS BADGES === */
+  .badge {
+    display: inline-block;
+    padding: 1px 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Share Tech Mono', monospace;
+    border: 1px solid;
+  }
+
+  .badge.broken {
+    color: var(--red);
+    border-color: var(--red-dim);
+    background: rgba(255,0,64,0.08);
+  }
+
+  .badge.weakened {
+    color: var(--amber);
+    border-color: var(--amber-dim);
+    background: rgba(255,170,0,0.08);
+  }
+
+  .badge.safe {
+    color: var(--green);
+    border-color: var(--green-dark);
+    background: rgba(0,255,65,0.08);
+  }
+
+  .badge.critical {
+    color: #fff;
+    border-color: var(--red);
+    background: rgba(255,0,64,0.25);
+    animation: blink 2s infinite;
+  }
+
+  /* === SEVERITY METERS === */
+  .severity-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0;
+  }
+
+  .severity-bar .label {
+    font-size: 10px;
+    color: var(--text-dim);
+    width: 120px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .severity-bar .bar {
+    flex: 1;
+    height: 6px;
+    background: #1a1a1a;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .severity-bar .bar .fill {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    transition: width 1s ease;
+  }
+
+  .fill.red { background: linear-gradient(90deg, var(--red-dim), var(--red)); }
+  .fill.amber { background: linear-gradient(90deg, var(--amber-dim), var(--amber)); }
+  .fill.green { background: linear-gradient(90deg, var(--green-dark), var(--green)); }
+
+  /* === ALERT BOXES === */
+  .alert {
+    border: 1px solid;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 12px;
+    position: relative;
+  }
+
+  .alert::before {
+    content: attr(data-type);
+    position: absolute;
+    top: -8px;
+    left: 12px;
+    background: var(--bg);
+    padding: 0 6px;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .alert.danger {
+    border-color: var(--red-dim);
+    background: rgba(255,0,64,0.04);
+  }
+  .alert.danger::before { color: var(--red); }
+
+  .alert.warning {
+    border-color: var(--amber-dim);
+    background: rgba(255,170,0,0.04);
+  }
+  .alert.warning::before { color: var(--amber); }
+
+  .alert.info {
+    border-color: var(--cyan-dim);
+    background: rgba(0,255,255,0.04);
+  }
+  .alert.info::before { color: var(--cyan); }
+
+  /* === ATTACK FLOW DIAGRAMS === */
+  .flow {
+    background: #080808;
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin: 16px 0;
+    font-size: 12px;
+    line-height: 1.8;
+    overflow-x: auto;
+    white-space: pre;
+    color: var(--text-dim);
+  }
+
+  .flow .node { color: var(--cyan); }
+  .flow .arrow { color: var(--green-dark); }
+  .flow .vuln { color: var(--red); }
+  .flow .safe { color: var(--green); }
+  .flow .label { color: var(--amber); }
+
+  /* === PHASE TIMELINE === */
+  .timeline {
+    position: relative;
+    padding-left: 30px;
+    margin: 20px 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--green), var(--amber), var(--red));
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+    padding: 14px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 18px;
+    width: 9px;
+    height: 9px;
+    border: 2px solid var(--green);
+    background: var(--bg);
+  }
+
+  .timeline-item .phase-label {
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .timeline-item .phase-title {
+    font-size: 14px;
+    color: #ddd;
+    margin-bottom: 6px;
+  }
+
+  .timeline-item .phase-meta {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* === FOOTER === */
+  .footer {
+    text-align: center;
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  .footer .sig {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    line-height: 2.4;
+  }
+
+  .footer .sig .green { color: var(--green-dark); }
+
+  .footer .pgp {
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 20px;
+    opacity: 0.4;
+  }
+
+  /* === SCROLLBAR === */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--green-dark); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--green-dim); }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 24px; letter-spacing: 4px; }
+    .nav-index { display: none; }
+    .container { padding: 42px 12px 40px; }
+    table { font-size: 10px; }
+    .flow { font-size: 10px; }
+  }
+
+  /* === GLOWING TEXT EFFECTS === */
+  .glow-green {
+    color: var(--green);
+    text-shadow: 0 0 8px rgba(0,255,65,0.4);
+  }
+
+  .glow-red {
+    color: var(--red);
+    text-shadow: 0 0 8px rgba(255,0,64,0.4);
+  }
+
+  .glow-cyan {
+    color: var(--cyan);
+    text-shadow: 0 0 8px rgba(0,255,255,0.4);
+  }
+
+  /* === MATRIX RAIN HEADER === */
+  .matrix-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    overflow: hidden;
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .matrix-col {
+    position: absolute;
+    top: -100%;
+    font-size: 10px;
+    color: var(--green);
+    writing-mode: vertical-rl;
+    animation: scroll-data 20s linear infinite;
+    line-height: 1;
+    letter-spacing: 4px;
+  }
+
+  /* === INLINE INDICATORS === */
+  .ind-broken { color: var(--red); }
+  .ind-safe { color: var(--green); }
+  .ind-warn { color: var(--amber); }
+
+  ul {
+    margin: 8px 0 12px 20px;
+    list-style: none;
+  }
+
+  ul li::before {
+    content: '>';
+    color: var(--green-dark);
+    margin-right: 8px;
+  }
+
+  ul li {
+    margin-bottom: 4px;
+  }
+
+  ol {
+    margin: 8px 0 12px 20px;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  ol li {
+    counter-increment: step;
+    margin-bottom: 6px;
+  }
+
+  ol li::before {
+    content: '[' counter(step) ']';
+    color: var(--cyan-dim);
+    margin-right: 8px;
+    font-size: 10px;
+  }
+
+  .replacement-arrow {
+    color: var(--red);
+    margin: 0 6px;
+  }
+
+  .size-comparison {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto;
+    gap: 4px 12px;
+    margin: 12px 0;
+    font-size: 11px;
+    align-items: center;
+  }
+
+  .ascii-box {
+    border: 1px solid var(--green-dark);
+    padding: 16px 20px;
+    margin: 16px 0;
+    background: #080808;
+    font-size: 11px;
+    line-height: 1.5;
+    white-space: pre;
+    overflow-x: auto;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span class="left">ZCL::QUANTUM_AUDIT//v1.0</span>
+  <span class="center">SENSITIVE CRYPTOGRAPHIC ANALYSIS</span>
+  <span class="right">2026-02-12 // ZCLASSIC CORE</span>
+</div>
+
+<!-- NAV -->
+<nav class="nav-index">
+  <a href="#s0" title="Overview">0</a>
+  <a href="#s1" title="Attack Surface">I</a>
+  <a href="#s2" title="Transparent">II</a>
+  <a href="#s3" title="Sapling">III</a>
+  <a href="#s4" title="Sprout/PoW">IV</a>
+  <a href="#s5" title="Severity">V</a>
+  <a href="#s6" title="Replacements">VI</a>
+  <a href="#s7" title="Roadmap">VII</a>
+  <a href="#s8" title="Conclusion">IX</a>
+</nav>
+
+<!-- MAIN -->
+<div class="container">
+
+<!-- ========== HERO ========== -->
+<header class="hero" id="s0">
+  <div class="matrix-bg">
+    <span class="matrix-col" style="left:5%">01001010101110001010100011101010010101</span>
+    <span class="matrix-col" style="left:15%;animation-delay:-3s">11010010101001110100101010011101001010</span>
+    <span class="matrix-col" style="left:25%;animation-delay:-7s">00101011101010010101110100101010101001</span>
+    <span class="matrix-col" style="left:35%;animation-delay:-2s">10101001010111010010101011101001010100</span>
+    <span class="matrix-col" style="left:45%;animation-delay:-5s">01010110101001011101001010101110100101</span>
+    <span class="matrix-col" style="left:55%;animation-delay:-8s">10010101110100101010011101001010101001</span>
+    <span class="matrix-col" style="left:65%;animation-delay:-1s">01101001010101110100101010111010010101</span>
+    <span class="matrix-col" style="left:75%;animation-delay:-4s">10100101011101001010100111010010101010</span>
+    <span class="matrix-col" style="left:85%;animation-delay:-6s">01010101001011101001010101110100101010</span>
+    <span class="matrix-col" style="left:95%;animation-delay:-9s">10101110100101010011101001010101001010</span>
+  </div>
+
+  <h1>Zclassic</h1>
+  <div class="subtitle">Quantum Threat Analysis</div>
+  <div class="classification-banner">Full Cryptographic Audit</div>
+  <div class="meta">
+    <span class="val">Project:</span> Zclassic (ZCL) &mdash; Zcash Fork, Equihash 192,7 (post-Bubbles)<br>
+    <span class="val">Scope:</span> All cryptographic primitives across all protocol layers<br>
+    <span class="val">Threat Model:</span> Cryptographically Relevant Quantum Computer (CRQC)<br>
+    <span class="val">Classification:</span> Shor's Algorithm (asymmetric) + Grover's Algorithm (symmetric)<br>
+    <span class="val">Date:</span> 2026-02-12 &mdash; <span class="val">Analyst:</span> Claude Opus 4.6
+  </div>
+</header>
+
+<!-- ========== SECTION I: ATTACK SURFACE MAP ========== -->
+<section class="section" id="s1">
+  <div class="section-header">
+    <span class="section-num">I</span>
+    <span class="section-title">Cryptographic Attack Surface Map</span>
+  </div>
+
+  <p>Every cryptographic primitive in Zclassic is classified under quantum threat into three categories:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Definition</th>
+        <th>Quantum Impact</th>
+        <th>Algorithm</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge broken">BROKEN</span></td>
+        <td>Relies on integer factorization or discrete log (ECC/pairing)</td>
+        <td>Shor's algorithm solves in polynomial time</td>
+        <td>ECDSA, Schnorr, ECDH, Groth16, Pedersen</td>
+      </tr>
+      <tr>
+        <td><span class="badge weakened">WEAKENED</span></td>
+        <td>Relies on symmetric crypto or hash functions</td>
+        <td>Grover's algorithm provides quadratic speedup (halves bit-security)</td>
+        <td>SHA-256, RIPEMD-160, BLAKE2b</td>
+      </tr>
+      <tr>
+        <td><span class="badge safe">SAFE</span></td>
+        <td>Sufficiently large symmetric primitives, information-theoretic</td>
+        <td>No known quantum advantage beyond Grover</td>
+        <td>ChaCha20-Poly1305-IETF, AES-256, BLAKE2b-512</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Complete Primitive Inventory</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>Primitive</th>
+        <th>Size</th>
+        <th>Layer</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Transaction signing</td>
+        <td>ECDSA / secp256k1</td>
+        <td>~72B DER sig</td>
+        <td>Transparent</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Public key</td>
+        <td>secp256k1 point</td>
+        <td>33B compressed</td>
+        <td>Transparent</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Address hashing</td>
+        <td>RIPEMD160(SHA256(pk))</td>
+        <td>20B</td>
+        <td>Transparent</td>
+        <td><span class="badge safe">SAFE</span></td>
+      </tr>
+      <tr>
+        <td>HD key derivation</td>
+        <td>HMAC-SHA512 + EC tweak</td>
+        <td>64B</td>
+        <td>Transparent</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Spend authorization</td>
+        <td>Jubjub Schnorr</td>
+        <td>64B sig</td>
+        <td>Sapling</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Zero-knowledge proofs</td>
+        <td>Groth16 / BN254</td>
+        <td>192B</td>
+        <td>Sapling</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Value commitments</td>
+        <td>Pedersen / Jubjub</td>
+        <td>32B</td>
+        <td>Sapling</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Note commitments</td>
+        <td>PedersenHash / Jubjub</td>
+        <td>32B</td>
+        <td>Sapling</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Merkle tree (Sapling)</td>
+        <td>PedersenHash</td>
+        <td>32B per node</td>
+        <td>Sapling</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Key agreement</td>
+        <td>Curve25519 ECDH</td>
+        <td>32B shared secret</td>
+        <td>Sapling</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Note encryption</td>
+        <td>ChaCha20-Poly1305-IETF</td>
+        <td>580B ciphertext</td>
+        <td>Sapling</td>
+        <td><span class="badge safe">SAFE</span></td>
+      </tr>
+      <tr>
+        <td>Binding signature</td>
+        <td>Jubjub Schnorr</td>
+        <td>64B</td>
+        <td>Sapling</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Nullifier derivation</td>
+        <td>PRF + Jubjub nk</td>
+        <td>32B</td>
+        <td>Sapling</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Sprout proofs</td>
+        <td>PHGR13 / BN254</td>
+        <td>296B (7xG1+1xG2)</td>
+        <td>Sprout</td>
+        <td><span class="badge broken">BROKEN</span></td>
+      </tr>
+      <tr>
+        <td>Merkle tree (Sprout)</td>
+        <td>SHA256Compress</td>
+        <td>32B per node</td>
+        <td>Sprout</td>
+        <td><span class="badge safe">SAFE</span></td>
+      </tr>
+      <tr>
+        <td>Signature hash</td>
+        <td>BLAKE2b (personalized)</td>
+        <td>32B</td>
+        <td>Consensus</td>
+        <td><span class="badge safe">SAFE</span></td>
+      </tr>
+      <tr>
+        <td>Proof-of-Work</td>
+        <td>Equihash(192,7) / BLAKE2b</td>
+        <td>400B solution</td>
+        <td>Mining</td>
+        <td><span class="badge weakened">WEAKENED</span></td>
+      </tr>
+      <tr>
+        <td>Network transport</td>
+        <td>Plaintext TCP</td>
+        <td>&mdash;</td>
+        <td>Network</td>
+        <td><span class="badge broken">NO CRYPTO</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========== SECTION II: TRANSPARENT LAYER ========== -->
+<section class="section" id="s2">
+  <div class="section-header">
+    <span class="section-num">II</span>
+    <span class="section-title">Transparent Layer // secp256k1 ECDSA</span>
+  </div>
+
+  <h3>Attack Vector: Shor's Algorithm on ECDLP</h3>
+
+  <p>The entire transparent transaction system rests on the hardness of the Elliptic Curve Discrete Logarithm Problem on secp256k1. Shor's algorithm inverts this in polynomial time.</p>
+
+  <div class="flow"><span class="node">Private Key (k)</span> <span class="arrow">&mdash;&mdash;[</span><span class="label">EC point multiplication</span><span class="arrow">]&mdash;&mdash;&gt;</span> <span class="node">Public Key (K = k*G)</span>
+
+<span class="safe">[CLASSICAL]</span>  One-way function. Computationally infeasible to reverse.
+<span class="vuln">[QUANTUM]</span>    Shor's algorithm: ~2330 logical qubits. O(256^3) gate ops.
+              <span class="vuln">TRIVIALLY REVERSIBLE.</span></div>
+
+  <h3>Key Derivation Chain</h3>
+
+  <div class="flow"><span class="node">Private Key</span>         32 bytes, random scalar on secp256k1
+    <span class="arrow">|</span>
+    <span class="arrow">v</span>  secp256k1_ec_pubkey_create()   <span class="vuln">[QUANTUM VULNERABLE]</span>
+    <span class="arrow">|</span>
+<span class="node">Public Key</span>          33 bytes compressed (0x02/0x03 + X)
+    <span class="arrow">|</span>
+    <span class="arrow">v</span>  RIPEMD160(SHA256(pubkey))       <span class="safe">[QUANTUM SAFE]</span>
+    <span class="arrow">|</span>
+<span class="node">CKeyID</span>              20 bytes (160-bit hash)
+    <span class="arrow">|</span>
+    <span class="arrow">v</span>  Base58Check(version + CKeyID)   <span class="safe">[ENCODING ONLY]</span>
+    <span class="arrow">|</span>
+<span class="node">Address</span>             "t1..." alphanumeric string</div>
+
+  <h3>Vulnerability by Output Type</h3>
+
+  <table>
+    <thead>
+      <tr><th>Output Type</th><th>Pubkey Exposed?</th><th>Quantum Status</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>P2PKH (never spent from)</td>
+        <td>No &mdash; hidden behind HASH160</td>
+        <td><span class="badge safe">SAFE</span></td>
+        <td>Pubkey not on-chain until first spend</td>
+      </tr>
+      <tr>
+        <td>P2PKH (has sent a TX)</td>
+        <td>Yes &mdash; scriptSig contains pubkey</td>
+        <td><span class="badge broken">BROKEN</span></td>
+        <td>Pubkey permanently on-chain after first spend</td>
+      </tr>
+      <tr>
+        <td>P2PK</td>
+        <td>Yes &mdash; pubkey in scriptPubKey</td>
+        <td><span class="badge broken">BROKEN</span></td>
+        <td>Permanently exposed since output creation</td>
+      </tr>
+      <tr>
+        <td>P2SH</td>
+        <td>No &mdash; hidden behind HASH160</td>
+        <td><span class="badge safe">SAFE</span></td>
+        <td>Until redeemScript is revealed</td>
+      </tr>
+      <tr>
+        <td>P2MS (multisig)</td>
+        <td>Yes &mdash; pubkeys in scriptPubKey</td>
+        <td><span class="badge broken">BROKEN</span></td>
+        <td>All pubkeys exposed at creation</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>ECDSA Signature Flow</h3>
+  <div class="codeblock" data-label="src/key.cpp:201-214">
+<span class="comment">// QUANTUM VULNERABLE: ECDSA signing with secp256k1</span>
+<span class="type">bool</span> CKey::Sign(<span class="type">const uint256</span> &amp;hash, <span class="type">std::vector&lt;unsigned char&gt;</span>&amp; vchSig) {
+    secp256k1_ecdsa_signature sig;
+    <span class="comment">// RFC-6979 deterministic nonce (safe classically, irrelevant quantumly)</span>
+    <span class="keyword">int</span> ret = <span class="danger">secp256k1_ecdsa_sign</span>(
+        secp256k1_context_sign, &amp;sig,
+        hash.begin(), begin(),
+        secp256k1_nonce_function_rfc6979, NULL  <span class="comment">// &lt;-- Shor's ignores nonce</span>
+    );
+    secp256k1_ecdsa_signature_serialize_der(...);
+    <span class="keyword">return</span> <span class="keyword">true</span>;
+}
+</div>
+
+  <div class="alert danger" data-type="Quantum Attack">
+    A quantum adversary who obtains any public key from the chain (from a spent P2PKH scriptSig, or any P2PK output) can recover the private key via Shor's algorithm in <strong>O(256&sup3;) quantum gates using ~2330 logical qubits</strong>. This enables theft of all UTXOs controlled by that key.
+  </div>
+</section>
+
+<!-- ========== SECTION III: SAPLING LAYER ========== -->
+<section class="section" id="s3">
+  <div class="section-header">
+    <span class="section-num">III</span>
+    <span class="section-title">Sapling Shielded Layer // Six Fatal Vectors</span>
+  </div>
+
+  <p>The Sapling shielded transaction system is the <strong>most complex and most vulnerable</strong> layer. It contains <span class="glow-red">six independent quantum-vulnerable components</span>, any one of which is sufficient to break the system.</p>
+
+  <!-- 3a: Spend Auth -->
+  <h3>3a. Spend Authorization &mdash; Jubjub Schnorr Signatures</h3>
+
+  <div class="codeblock" data-label="SpendDescription structure">
+<span class="type">SpendDescription</span> {
+    <span class="type">uint256</span>  cv;            <span class="comment">// 32B  value commitment      [Jubjub Pedersen]</span>
+    <span class="type">uint256</span>  anchor;        <span class="comment">// 32B  Merkle root            [PedersenHash]</span>
+    <span class="type">uint256</span>  nullifier;     <span class="comment">// 32B  nullifier              [PRF + Jubjub nk]</span>
+    <span class="type">uint256</span>  rk;            <span class="comment">// 32B  <span class="danger">randomized public key  [EXPOSED ON-CHAIN]</span></span>
+    <span class="type">GrothProof</span> zkproof;     <span class="comment">// 192B Groth16 proof          [BN254 pairing]</span>
+    <span class="type">sig_t</span>   spendAuthSig;  <span class="comment">// 64B  Schnorr signature      [Jubjub curve]</span>
+};
+<span class="comment">// TOTAL: ~544 bytes per Sapling spend</span>
+</div>
+
+  <div class="flow"><span class="node">ask</span> (spending secret) <span class="arrow">&mdash;&mdash;[</span><span class="label">Jubjub scalar mult</span><span class="arrow">]&mdash;&mdash;&gt;</span> <span class="node">ak</span> (spend auth key)
+    <span class="arrow">|</span>
+    <span class="arrow">v</span>  randomize with alpha
+    <span class="arrow">|</span>
+<span class="node">rk</span> = ak + alpha*G     <span class="vuln">[Published in every SpendDescription on-chain]</span>
+    <span class="arrow">|</span>
+    <span class="arrow">v</span>  Shor's algorithm on Jubjub (~253-bit curve)
+    <span class="arrow">|</span>
+<span class="vuln">RECOVERED: randomized secret key</span> <span class="arrow">&mdash;&mdash;&gt;</span> <span class="vuln">FORGE spend authorization</span></div>
+
+  <div class="alert danger" data-type="Critical">
+    Unlike transparent P2PKH where the pubkey is hidden until spend, <strong>every Sapling spend publishes <code>rk</code> permanently on-chain</strong>. All historical shielded spends are retroactively vulnerable to quantum key recovery.
+  </div>
+
+  <!-- 3b: Groth16 -->
+  <h3>3b. Groth16 Zero-Knowledge Proofs &mdash; BN254 Pairing</h3>
+
+  <div class="codeblock" data-label="Groth16 proof structure">
+<span class="type">GrothProof</span> = {
+    <span class="type">G1</span> pi_A;    <span class="comment">// 48 bytes  &mdash; BN254 base curve point</span>
+    <span class="type">G2</span> pi_B;    <span class="comment">// 96 bytes  &mdash; BN254 twist curve point</span>
+    <span class="type">G1</span> pi_C;    <span class="comment">// 48 bytes  &mdash; BN254 base curve point</span>
+};
+<span class="comment">// TOTAL: 192 bytes</span>
+<span class="comment">// Verification: e(pi_A, pi_B) = e(alpha, beta) * e(L, gamma) * e(pi_C, delta)</span>
+<span class="comment">// where e: G1 x G2 -> GT is a bilinear map on BN254 (254-bit)</span>
+</div>
+
+  <p>Shor's algorithm breaks:</p>
+  <ul>
+    <li>The Discrete Logarithm in G1 (254-bit)</li>
+    <li>The Discrete Logarithm in G2 (254-bit over Fq2)</li>
+    <li>The Computational Diffie-Hellman in GT (target group)</li>
+    <li>The Bilinear Diffie-Hellman assumption (BDH)</li>
+  </ul>
+
+  <div class="alert danger" data-type="Existential Threat">
+    A quantum adversary can <strong>extract the toxic waste</strong> (trapdoor) from the Common Reference String, then <strong>forge arbitrary proofs for false statements</strong> &mdash; including proofs that create shielded ZCL from nothing. <strong>This enables silent, undetectable, unlimited supply inflation.</strong> This is the single most catastrophic quantum vulnerability in Zclassic.
+  </div>
+
+  <!-- 3c: Value Commitments -->
+  <h3>3c. Value Commitments &mdash; Pedersen on Jubjub</h3>
+
+  <div class="codeblock" data-label="Pedersen commitment">
+cv = v * G_value + rcv * G_random    <span class="comment">// Pedersen commitment on Jubjub</span>
+<span class="comment">// v   = transaction value (hidden)</span>
+<span class="comment">// rcv = commitment randomness (hidden)</span>
+<span class="comment">// G_value, G_random = fixed Jubjub generators</span>
+
+<span class="danger">// QUANTUM ATTACK: Shor's on Jubjub recovers v and rcv from cv</span>
+<span class="danger">// RESULT: All historical transaction amounts become public</span>
+</div>
+
+  <!-- 3d: PedersenHash Merkle Tree -->
+  <h3>3d. Note Commitment Merkle Tree &mdash; PedersenHash</h3>
+
+  <div class="codeblock" data-label="src/zcash/IncrementalMerkleTree.hpp">
+<span class="comment">// SPROUT: Uses SHA256Compress &mdash; QUANTUM SAFE</span>
+<span class="keyword">typedef</span> IncrementalMerkleTree&lt;<span class="number">29</span>, <span class="safe">SHA256Compress</span>&gt; SproutMerkleTree;
+
+<span class="comment">// SAPLING: Uses PedersenHash &mdash; QUANTUM BROKEN (ECC-based hash)</span>
+<span class="keyword">typedef</span> IncrementalMerkleTree&lt;<span class="number">32</span>, <span class="danger">PedersenHash</span>&gt; SaplingMerkleTree;
+</div>
+
+  <div class="alert warning" data-type="Design Regression">
+    The Sapling Merkle tree uses PedersenHash (an elliptic-curve-based hash on Jubjub) instead of a classical hash function. This is a <strong>quantum regression from Sprout</strong>, which correctly used SHA256Compress. Shor's algorithm breaks PedersenHash collision resistance, compromising the entire commitment tree integrity.
+  </div>
+
+  <!-- 3e: Nullifier -->
+  <h3>3e. Nullifier Derivation &mdash; Jubjub nk</h3>
+
+  <div class="flow"><span class="node">nsk</span> (nullifier secret) <span class="arrow">&mdash;&mdash;[</span><span class="label">Jubjub scalar mult</span><span class="arrow">]&mdash;&mdash;&gt;</span> <span class="node">nk</span> (nullifier key)
+    <span class="arrow">|</span>
+    <span class="arrow">v</span>  PRF_nf(nk, rho) = nullifier
+    <span class="arrow">|</span>
+<span class="vuln">Recovery of nsk from nk via Shor's allows:</span>
+    <span class="vuln">- Linking nullifiers to specific notes</span>
+    <span class="vuln">- Deanonymizing the entire shielded transaction graph</span>
+    <span class="vuln">- Complete destruction of Sapling privacy</span></div>
+
+  <!-- 3f: ECDH -->
+  <h3>3f. Ephemeral Key Agreement &mdash; Curve25519 / Jubjub ECDH</h3>
+
+  <div class="codeblock" data-label="src/zcash/NoteEncryption.cpp">
+<span class="comment">// Key Derivation Function for Sapling note encryption</span>
+<span class="type">void</span> KDF_Sapling(
+    <span class="type">unsigned char</span> K[<span class="number">32</span>],          <span class="comment">// Output: 256-bit symmetric key</span>
+    <span class="type">const uint256</span> &amp;dhsecret,     <span class="comment">// Input: <span class="danger">ECDH shared secret [BROKEN]</span></span>
+    <span class="type">const uint256</span> &amp;epk            <span class="comment">// Input: ephemeral public key</span>
+) {
+    <span class="comment">// BLAKE2b with personalization "Zcash_SaplingKDF"</span>
+    <span class="comment">// Symmetric key is SAFE, but derived from BROKEN ECDH</span>
+}
+
+<span class="comment">// Encryption uses ChaCha20-Poly1305-IETF (QUANTUM SAFE cipher)</span>
+<span class="comment">// BUT: key agreement is Curve25519 ECDH (QUANTUM BROKEN)</span>
+<span class="comment">// NET RESULT: All encrypted notes are retroactively decryptable</span>
+</div>
+
+  <div class="alert danger" data-type="Harvest Now, Decrypt Later">
+    Every OutputDescription published on-chain contains an <code>ephemeralKey</code> (Jubjub point). A quantum adversary recovers the ephemeral secret key via Shor's, computes the ECDH shared secret, derives the symmetric key, and <strong>decrypts all historical encrypted notes</strong> &mdash; revealing recipient, amount, and memo for every shielded transaction ever made. ChaCha20-Poly1305-IETF is quantum-safe, but its key derivation is not. The entire privacy guarantee collapses.
+  </div>
+
+  <h3>Sapling Vulnerability Heat Map</h3>
+
+  <div style="margin: 20px 0;">
+    <div class="severity-bar">
+      <span class="label">Proof Forgery</span>
+      <div class="bar"><div class="fill red" style="width:100%"></div></div>
+      <span class="badge critical">EXISTENTIAL</span>
+    </div>
+    <div class="severity-bar">
+      <span class="label">Spend Auth</span>
+      <div class="bar"><div class="fill red" style="width:95%"></div></div>
+      <span class="badge broken">TOTAL THEFT</span>
+    </div>
+    <div class="severity-bar">
+      <span class="label">ECDH Decrypt</span>
+      <div class="bar"><div class="fill red" style="width:90%"></div></div>
+      <span class="badge broken">FULL DEANON</span>
+    </div>
+    <div class="severity-bar">
+      <span class="label">Value Commit</span>
+      <div class="bar"><div class="fill red" style="width:85%"></div></div>
+      <span class="badge broken">AMOUNTS LEAKED</span>
+    </div>
+    <div class="severity-bar">
+      <span class="label">Nullifier Key</span>
+      <div class="bar"><div class="fill red" style="width:82%"></div></div>
+      <span class="badge broken">GRAPH DEANON</span>
+    </div>
+    <div class="severity-bar">
+      <span class="label">Merkle Tree</span>
+      <div class="bar"><div class="fill red" style="width:75%"></div></div>
+      <span class="badge broken">INTEGRITY</span>
+    </div>
+    <div class="severity-bar">
+      <span class="label">Note Encrypt</span>
+      <div class="bar"><div class="fill green" style="width:15%"></div></div>
+      <span class="badge safe">CIPHER SAFE</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION IV: SPROUT + POW ========== -->
+<section class="section" id="s4">
+  <div class="section-header">
+    <span class="section-num">IV</span>
+    <span class="section-title">Sprout Layer + Proof-of-Work + Network</span>
+  </div>
+
+  <h3>Sprout Legacy (PHGR13)</h3>
+
+  <table>
+    <thead>
+      <tr><th>Component</th><th>Primitive</th><th>Quantum Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>PHGR13 proof (7xG1+1xG2 = 296B)</td><td>BN254 pairing</td><td><span class="badge broken">BROKEN</span></td></tr>
+      <tr><td>JoinSplit signature</td><td>Ed25519 variant</td><td><span class="badge broken">BROKEN</span></td></tr>
+      <tr><td>Note commitment (cm)</td><td>SHA256</td><td><span class="badge safe">SAFE</span></td></tr>
+      <tr><td>Merkle tree (depth 29)</td><td>SHA256Compress</td><td><span class="badge safe">SAFE</span></td></tr>
+      <tr><td>Key agreement</td><td>Curve25519 ECDH</td><td><span class="badge broken">BROKEN</span></td></tr>
+      <tr><td>PRF functions</td><td>SHA256 (no-padding)</td><td><span class="badge safe">SAFE</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert info" data-type="Note">
+    Sprout has a mixed quantum profile. Its hash-based components (commitments, Merkle tree, PRFs) are quantum-safe. This demonstrates the correct design pattern that Sapling should have followed for its Merkle tree.
+  </div>
+
+  <h3>Equihash Proof-of-Work</h3>
+
+  <div class="codeblock" data-label="Equihash Parameters">
+<span class="comment">// Personalization: "ZcashPoW" + N(LE32) + K(LE32)</span>
+<span class="comment">// Hash: BLAKE2b (libsodium)</span>
+<span class="comment">// IMPORTANT: Equihash params changed at UPGRADE_BUBBLES (block 585,318)</span>
+
+<span class="type">Genesis &mdash; Block 585,317 (historical)</span>:
+  N = <span class="number">200</span>    K = <span class="number">9</span>
+  CollisionBitLength  = N/(K+1) = <span class="number">20</span> bits
+  SolutionWidth       = <span class="number">1344</span> bytes
+  Memory requirement: ~<span class="number">700 MB</span>
+
+<span class="type">Block 585,318+ (CURRENT &mdash; post-Bubbles upgrade)</span>:
+  N = <span class="number">192</span>    K = <span class="number">7</span>
+  CollisionBitLength  = N/(K+1) = <span class="number">24</span> bits
+  SolutionWidth       = <span class="number">400</span> bytes
+  Memory requirement: ~<span class="number">2-4 GB</span>
+
+<span class="comment">// Source: src/consensus/upgrades.cpp lines 78-82</span>
+<span class="comment">//   UPGRADE_BUBBLES: { N = 192, K = 7 }</span>
+<span class="comment">// Source: src/chainparams.cpp line 113</span>
+<span class="comment">//   UPGRADE_BUBBLES activation height = 585318</span>
+
+<span class="type">Quantum Impact</span>:
+  Grover's speedup for collision finding: ~<span class="number">4x</span>
+  Effective security: ~<span class="number">128-bit</span> (from 256-bit)
+  Difficulty adjustment: <span class="safe">SELF-CORRECTING</span> (recalibrates automatically)
+</div>
+
+  <div class="severity-bar">
+    <span class="label">Equihash PoW</span>
+    <div class="bar"><div class="fill amber" style="width:25%"></div></div>
+    <span class="badge weakened">LOW RISK</span>
+  </div>
+
+  <h3>Network Layer</h3>
+
+  <table>
+    <thead>
+      <tr><th>Component</th><th>Current State</th><th>Quantum Relevance</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Peer-to-peer transport</td><td>Plaintext TCP (no TLS)</td><td>Already broken classically</td></tr>
+      <tr><td>Tor v3 transport</td><td>AES-256 + Curve25519</td><td>AES <span class="badge safe">SAFE</span>; Curve25519 <span class="badge broken">BROKEN</span></td></tr>
+      <tr><td>DNS seeds</td><td>No DNSSEC</td><td>Already broken classically</td></tr>
+      <tr><td>Peer authentication</td><td>IP-based only</td><td>No crypto to break</td></tr>
+      <tr><td>Message integrity</td><td>SHA256d checksum (4 bytes)</td><td>Corruption detection only</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========== SECTION V: SEVERITY RANKING ========== -->
+<section class="section" id="s5">
+  <div class="section-header">
+    <span class="section-num">V</span>
+    <span class="section-title">Severity Ranking // Impact Assessment</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>#</th><th>Vulnerability</th><th>Impact</th><th>Detectability</th><th>Severity</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="glow-red">1</span></td>
+        <td>Groth16 proof forgery (BN254)</td>
+        <td>Unlimited supply inflation in shielded pool</td>
+        <td><span class="ind-broken">UNDETECTABLE</span></td>
+        <td><span class="badge critical">EXISTENTIAL</span></td>
+      </tr>
+      <tr>
+        <td><span class="glow-red">2</span></td>
+        <td>Sapling spend auth forgery (Jubjub)</td>
+        <td>Theft of all shielded funds</td>
+        <td>Detectable (double-spend attempts)</td>
+        <td><span class="badge broken">CRITICAL</span></td>
+      </tr>
+      <tr>
+        <td><span class="glow-red">3</span></td>
+        <td>Value commitment breaking (Pedersen)</td>
+        <td>Full deanonymization of all amounts</td>
+        <td><span class="ind-broken">PASSIVE &mdash; NO TRACE</span></td>
+        <td><span class="badge broken">CRITICAL</span></td>
+      </tr>
+      <tr>
+        <td><span class="glow-red">4</span></td>
+        <td>Nullifier key recovery (Jubjub nk)</td>
+        <td>Complete transaction graph deanonymization</td>
+        <td><span class="ind-broken">PASSIVE &mdash; NO TRACE</span></td>
+        <td><span class="badge broken">CRITICAL</span></td>
+      </tr>
+      <tr>
+        <td><span class="glow-red">5</span></td>
+        <td>ECDH key recovery (Curve25519)</td>
+        <td>Decryption of all encrypted memos and notes</td>
+        <td><span class="ind-broken">PASSIVE &mdash; NO TRACE</span></td>
+        <td><span class="badge broken">CRITICAL</span></td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>ECDSA key recovery (secp256k1)</td>
+        <td>Theft of transparent funds w/ exposed pubkeys</td>
+        <td>Detectable (unauthorized spends)</td>
+        <td><span class="badge broken">HIGH</span></td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>PedersenHash Merkle collision</td>
+        <td>Merkle tree integrity compromise</td>
+        <td>Complex to exploit at scale</td>
+        <td><span class="badge broken">HIGH</span></td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Equihash mining advantage</td>
+        <td>~4x mining speedup</td>
+        <td>Self-correcting via difficulty</td>
+        <td><span class="badge weakened">LOW</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert danger" data-type="Key Insight">
+    <strong>Vulnerabilities #3, #4, and #5 are passive attacks.</strong> A quantum adversary can deanonymize the entire historical shielded transaction graph <em>without making any on-chain transactions</em>. There is no way to detect or prevent this after the fact. Every shielded transaction already recorded on the blockchain is a future target. This is the "harvest now, decrypt later" scenario made real.
+  </div>
+</section>
+
+<!-- ========== SECTION VI: REPLACEMENT MAP ========== -->
+<section class="section" id="s6">
+  <div class="section-header">
+    <span class="section-num">VI</span>
+    <span class="section-title">Post-Quantum Replacement Map</span>
+  </div>
+
+  <h3>Primitive-Level Replacement</h3>
+
+  <div class="ascii-box">
+CURRENT PRIMITIVE                     POST-QUANTUM REPLACEMENT
+<span class="vuln">========================================================================</span>
+<span class="danger">ECDSA (secp256k1)</span>            <span class="arrow">---&gt;</span>  <span class="safe">ML-DSA-65  (FIPS 204 / Dilithium3)</span>
+<span class="danger">Jubjub Schnorr signatures</span>    <span class="arrow">---&gt;</span>  <span class="safe">ML-DSA-65  or  SLH-DSA (SPHINCS+)</span>
+<span class="danger">Groth16 proofs (BN254)</span>       <span class="arrow">---&gt;</span>  <span class="safe">STARKs     (hash-based, transparent)</span>
+<span class="danger">Pedersen commitments (Jubjub)</span> <span class="arrow">---&gt;</span>  <span class="safe">SHA3-256   or  BLAKE3 commitments</span>
+<span class="danger">PedersenHash (Merkle tree)</span>   <span class="arrow">---&gt;</span>  <span class="safe">SHA256     or  BLAKE2b (a la Sprout)</span>
+<span class="danger">Curve25519 ECDH</span>              <span class="arrow">---&gt;</span>  <span class="safe">ML-KEM-768 (FIPS 203 / Kyber)</span>
+<span class="danger">BIP32 HD derivation (EC)</span>     <span class="arrow">---&gt;</span>  <span class="safe">XMSS       or  hash-based HD scheme</span>
+</div>
+
+  <h3>Size Impact Analysis</h3>
+
+  <p>The engineering reality of post-quantum cryptography &mdash; everything gets much larger:</p>
+
+  <table>
+    <thead>
+      <tr><th>Primitive</th><th>Current Size</th><th>PQC Replacement</th><th>New Size</th><th>Bloat</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ECDSA signature</td>
+        <td>72 bytes</td>
+        <td>ML-DSA-65 (Dilithium3)</td>
+        <td>3,293 bytes</td>
+        <td><span class="ind-broken">46x</span></td>
+      </tr>
+      <tr>
+        <td>ECDSA signature</td>
+        <td>72 bytes</td>
+        <td>SLH-DSA-128s (SPHINCS+)</td>
+        <td>7,856 bytes</td>
+        <td><span class="ind-broken">109x</span></td>
+      </tr>
+      <tr>
+        <td>secp256k1 pubkey</td>
+        <td>33 bytes</td>
+        <td>ML-DSA-65 pubkey</td>
+        <td>1,952 bytes</td>
+        <td><span class="ind-broken">59x</span></td>
+      </tr>
+      <tr>
+        <td>Groth16 proof</td>
+        <td>192 bytes</td>
+        <td>STARK proof</td>
+        <td>45,000 &ndash; 200,000 bytes</td>
+        <td><span class="ind-broken">230-1000x</span></td>
+      </tr>
+      <tr>
+        <td>Groth16 proof</td>
+        <td>192 bytes</td>
+        <td>Lattice-SNARK</td>
+        <td>50,000 &ndash; 100,000 bytes</td>
+        <td><span class="ind-broken">260-520x</span></td>
+      </tr>
+      <tr>
+        <td>Pedersen commitment</td>
+        <td>32 bytes</td>
+        <td>SHA3-256 commitment</td>
+        <td>32 bytes</td>
+        <td><span class="ind-safe">1x</span></td>
+      </tr>
+      <tr>
+        <td>Curve25519 DH pubkey</td>
+        <td>32 bytes</td>
+        <td>ML-KEM-768 encaps key</td>
+        <td>1,184 bytes</td>
+        <td><span class="ind-broken">37x</span></td>
+      </tr>
+      <tr>
+        <td>Curve25519 ciphertext</td>
+        <td>32 bytes</td>
+        <td>ML-KEM-768 ciphertext</td>
+        <td>1,088 bytes</td>
+        <td><span class="ind-broken">34x</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Block/TX Size Constraint Analysis</h3>
+
+  <div class="codeblock" data-label="src/consensus/consensus.h">
+<span class="comment">// CURRENT LIMITS</span>
+<span class="keyword">static const</span> <span class="type">unsigned int</span> MAX_BLOCK_SIZE = <span class="number">200000</span>;             <span class="comment">// 200 KB</span>
+<span class="keyword">static const</span> <span class="type">unsigned int</span> MAX_TX_SIZE_AFTER_SAPLING = <span class="number">102000</span>;  <span class="comment">// 102 KB</span>
+
+<span class="comment">// POST-QUANTUM SAPLING TX ESTIMATE (2 spends + 2 outputs)</span>
+<span class="comment">// Current:  2 * 544 + 2 * 1120                       =    ~3.3 KB</span>
+<span class="comment">// ML-DSA:   2 * (3293 + 45000) + 2 * (1184 + 45000)  =  ~188.9 KB</span>
+<span class="comment">//                                                        ^^^^^^^^^</span>
+<span class="danger">// EXCEEDS MAX_TX_SIZE (102 KB) AND NEARLY MAX_BLOCK_SIZE (200 KB)</span>
+
+<span class="comment">// REQUIRED NEW LIMITS (minimum):</span>
+<span class="comment">// MAX_TX_SIZE   = 500,000   (500 KB)</span>
+<span class="comment">// MAX_BLOCK_SIZE = 5,000,000 (5 MB)</span>
+</div>
+</section>
+
+<!-- ========== SECTION VII: MIGRATION ROADMAP ========== -->
+<section class="section" id="s7">
+  <div class="section-header">
+    <span class="section-num">VII</span>
+    <span class="section-title">Strategic Migration Roadmap</span>
+  </div>
+
+  <div class="timeline">
+
+    <!-- Phase 0 -->
+    <div class="timeline-item">
+      <div class="phase-label">Phase 0 &mdash; Immediate Risk Mitigation</div>
+      <div class="phase-title">No Consensus Changes Required</div>
+      <div class="phase-meta">Effort: Low | Impact: High | Fork: None</div>
+      <ul style="margin-top:10px">
+        <li>Default wallet to shielded (z-addr) sends &mdash; minimize transparent pubkey exposure</li>
+        <li>Address reuse detection &mdash; warn when receiving to address with on-chain pubkey</li>
+        <li>UTXO migration tooling &mdash; help users consolidate to fresh never-spent addresses</li>
+        <li>Publish quantum risk documentation for each output type</li>
+        <li>Inventory all exposed public keys in the UTXO set &mdash; quantify at-risk ZCL</li>
+      </ul>
+    </div>
+
+    <!-- Phase 1 -->
+    <div class="timeline-item">
+      <div class="phase-label">Phase 1 &mdash; Hash-Based Transparent Hardening</div>
+      <div class="phase-title">New TX_HASH_LOCKED Output Type</div>
+      <div class="phase-meta">Effort: Moderate | Impact: Medium | Fork: Soft Fork (TX v5)</div>
+      <ul style="margin-top:10px">
+        <li>New output type: <code>TX_MERKLEROOT</code> &mdash; commit to script tree hash, not public key</li>
+        <li>Public key only revealed at spend time (short exposure window)</li>
+        <li>Tagged hashing with BLAKE2b (already available via libsodium)</li>
+        <li>No SegWit dependency &mdash; adapted for Zclassic's native script system</li>
+      </ul>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="timeline-item">
+      <div class="phase-label">Phase 2 &mdash; Sapling Merkle Tree Migration</div>
+      <div class="phase-title">Replace PedersenHash with BLAKE2b</div>
+      <div class="phase-meta">Effort: Moderate | Impact: High | Fork: Hard Fork</div>
+      <ul style="margin-top:10px">
+        <li>Replace quantum-vulnerable PedersenHash with BLAKE2b or SHA256 for the note commitment tree</li>
+        <li>Maintain depth-32 tree (same 2<sup>32</sup> note capacity)</li>
+        <li>Dual-tree transition: run old + new Merkle trees during migration window</li>
+        <li>Users migrate shielded notes from old tree to new tree before cutoff</li>
+        <li><strong>Lowest effort, highest value change</strong> &mdash; Sprout already proves this pattern works</li>
+      </ul>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="timeline-item">
+      <div class="phase-label">Phase 3 &mdash; Post-Quantum Key Exchange</div>
+      <div class="phase-title">Replace ECDH with ML-KEM (Kyber)</div>
+      <div class="phase-meta">Effort: High | Impact: High | Fork: Hard Fork</div>
+      <ul style="margin-top:10px">
+        <li>Replace Curve25519/Jubjub ECDH in OutputDescription with ML-KEM-768</li>
+        <li>Adapt KDF_Sapling: inputs change from ECDH secret to KEM shared secret</li>
+        <li>OutputDescription grows ~1 KB per output (ML-KEM-768 ciphertext)</li>
+        <li>Old notes remain decryptable; new notes use PQC key exchange</li>
+        <li><strong>Protects forward secrecy</strong> &mdash; even with classical signatures, eavesdroppers can't decrypt</li>
+      </ul>
+    </div>
+
+    <!-- Phase 4 -->
+    <div class="timeline-item">
+      <div class="phase-label">Phase 4 &mdash; Post-Quantum Signatures</div>
+      <div class="phase-title">Replace ECDSA + Jubjub Schnorr with ML-DSA</div>
+      <div class="phase-meta">Effort: Very High | Impact: Critical | Fork: Hard Fork</div>
+      <ul style="margin-top:10px">
+        <li><strong>Transparent:</strong> Replace ECDSA with ML-DSA-65 (pubkey: 1952B, sig: 3293B)</li>
+        <li><strong>Sapling spend auth:</strong> Replace Jubjub Schnorr with ML-DSA</li>
+        <li><strong>Binding signature:</strong> Replace Jubjub binding sig with ML-DSA</li>
+        <li>Increase MAX_TX_SIZE to 500+ KB, MAX_BLOCK_SIZE to 5+ MB</li>
+        <li>Option: hybrid ECDSA+ML-DSA dual signatures during transition period</li>
+      </ul>
+    </div>
+
+    <!-- Phase 5 -->
+    <div class="timeline-item">
+      <div class="phase-label">Phase 5 &mdash; Post-Quantum Proof System</div>
+      <div class="phase-title">Replace Groth16/BN254 with Hash-Based Proofs</div>
+      <div class="phase-meta">Effort: Extreme | Impact: Existential | Fork: Hard Fork</div>
+      <ul style="margin-top:10px">
+        <li><strong>Recommended: STARKs</strong> &mdash; hash-based, no trusted setup, quantum-resistant</li>
+        <li>Proof size: ~45-200 KB (vs 192 bytes) &mdash; verification ~10-100x slower</li>
+        <li>Eliminates the toxic waste / trusted setup ceremony simultaneously</li>
+        <li>Alternative: Lattice-based SNARKs (~50-100 KB, faster, but less mature)</li>
+        <li><span class="ind-broken">Reject:</span> Bulletproofs+ (still based on discrete log &mdash; not quantum-safe)</li>
+        <li>Complete circuit rewrite required &mdash; largest engineering effort of all phases</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========== SECTION VIII: ADVANTAGES & DISADVANTAGES ========== -->
+<section class="section" id="s8a">
+  <div class="section-header">
+    <span class="section-num">VIII</span>
+    <span class="section-title">Zclassic Position Assessment</span>
+  </div>
+
+  <h3>Advantages for PQC Migration</h3>
+
+  <table>
+    <thead>
+      <tr><th>Advantage</th><th>Detail</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="ind-safe">Small chain</span></td><td>Lower total UTXO set makes migration tractable</td></tr>
+      <tr><td><span class="ind-safe">Sapling exists</span></td><td>Shielded infrastructure in place; "only" swap primitives</td></tr>
+      <tr><td><span class="ind-safe">BLAKE2b available</span></td><td>Via libsodium; quantum-safe hash already linked and tested</td></tr>
+      <tr><td><span class="ind-safe">Rust integration</span></td><td>Via librustzcash; modern PQC libraries (Rust-native) integrate naturally</td></tr>
+      <tr><td><span class="ind-safe">Sprout precedent</span></td><td>SHA256Compress Merkle tree proves hash-based commitment pattern works</td></tr>
+      <tr><td><span class="ind-safe">Agile governance</span></td><td>Small community = faster consensus on protocol upgrades</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Disadvantages</h3>
+
+  <table>
+    <thead>
+      <tr><th>Disadvantage</th><th>Detail</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="ind-broken">No SegWit</span></td><td>Cannot use Bitcoin's witness versioning; must use TX version bumps</td></tr>
+      <tr><td><span class="ind-broken">200 KB block limit</span></td><td>PQC proofs force 10-50x increase; bandwidth/storage/sync impact</td></tr>
+      <tr><td><span class="ind-broken">Groth16 deeply embedded</span></td><td>Proof system touches every Sapling TX; replacement = circuit rewrite</td></tr>
+      <tr><td><span class="ind-broken">Dual codebase</span></td><td>Critical crypto in both C++ and Rust (librustzcash); PQC changes hit both</td></tr>
+      <tr><td><span class="ind-broken">No upstream PQC</span></td><td>Zcash itself hasn't implemented PQC; Zclassic can't inherit the work</td></tr>
+      <tr><td><span class="ind-broken">Trusted setup</span></td><td>Groth16 CRS ceremony; migration to STARKs eliminates this but is massive</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========== SECTION IX: EXECUTIVE SUMMARY ========== -->
+<section class="section" id="s8">
+  <div class="section-header">
+    <span class="section-num">IX</span>
+    <span class="section-title">Executive Summary</span>
+  </div>
+
+  <div class="alert danger" data-type="The Threat">
+    A Cryptographically Relevant Quantum Computer (CRQC) breaks <strong>every authentication and privacy mechanism</strong> in Zclassic's Sapling layer simultaneously. The most dangerous attack is <strong>silent supply inflation</strong> via forged Groth16 proofs &mdash; undetectable, unlimited, and irreversible.
+  </div>
+
+  <h3>The Timeline</h3>
+  <p>Conservative estimates place CRQC at <strong>2035-2045</strong>. However:</p>
+  <ul>
+    <li><strong>"Harvest now, decrypt later"</strong> attacks mean encrypted data captured today is broken retroactively</li>
+    <li>Every shielded transaction on-chain is a future target for deanonymization</li>
+    <li>Migration takes years; starting late means exposure during the transition window</li>
+  </ul>
+
+  <h3>Priority Matrix</h3>
+
+  <div class="ascii-box">URGENCY       COMPONENT                     REPLACEMENT
+<span class="vuln">============================================================================</span>
+<span class="safe">NOW</span>           User education + tooling      No code changes needed
+<span class="ind-warn">HIGH</span>          PedersenHash Merkle tree       BLAKE2b / SHA256
+<span class="ind-warn">HIGH</span>          ECDH key agreement             ML-KEM (Kyber)
+<span class="ind-warn">MEDIUM</span>        ECDSA / Schnorr signatures     ML-DSA (Dilithium)
+<span class="vuln">CRITICAL</span>      Groth16 proof system           STARKs (hash-based)
+<span class="safe">LOW</span>           Equihash PoW                   No change needed</div>
+
+  <h3>The Bottom Line</h3>
+
+  <p>Zclassic's shielded pool is a <span class="glow-red">ticking cryptographic time bomb</span> under quantum threat. Not because the symmetric crypto fails, but because <strong>every single authentication, commitment, and proof primitive</strong> relies on elliptic curve hardness assumptions that Shor's algorithm destroys.</p>
+
+  <p>The Groth16 vulnerability is existential: it enables <strong>undetectable counterfeiting</strong>. The passive deanonymization attacks (value commitments, nullifier keys, ECDH) mean historical privacy is <strong>retroactively destroyed</strong> the moment a CRQC exists.</p>
+
+  <p>The migration path exists but requires sustained, multi-year engineering effort with significant block size and transaction format changes. <strong>Starting Phase 0 and Phase 1 immediately is the minimum responsible action.</strong></p>
+</section>
+
+<!-- ========== APPENDIX: FILE REFERENCE ========== -->
+<section class="section" id="appendix">
+  <div class="section-header">
+    <span class="section-num">A</span>
+    <span class="section-title">Appendix // Critical File Reference</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Component</th><th>File</th><th>Key Lines</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Private key ops</td><td><code>src/key.h</code>, <code>src/key.cpp</code></td><td>Sign(): 201-214, MakeNewKey(): 159-165</td></tr>
+      <tr><td>Public key verify</td><td><code>src/pubkey.h</code>, <code>src/pubkey.cpp</code></td><td>Verify(): 18-37, GetID(): 150-154</td></tr>
+      <tr><td>Groth16 proofs</td><td><code>src/zcash/Proof.hpp</code></td><td>PHGRProof: 179-236, GrothProof size: 18-23</td></tr>
+      <tr><td>JoinSplit circuit</td><td><code>src/zcash/JoinSplit.hpp</code></td><td>GROTH_PROOF_SIZE: 18-23</td></tr>
+      <tr><td>Note encryption</td><td><code>src/zcash/NoteEncryption.hpp/.cpp</code></td><td>KDF_Sapling: 45-68, ChaCha20: 143-148</td></tr>
+      <tr><td>Sapling addresses</td><td><code>src/zcash/Address.hpp</code></td><td>SaplingPaymentAddress: 105-131</td></tr>
+      <tr><td>PRF functions</td><td><code>src/zcash/prf.h</code>, <code>prf.cpp</code></td><td>PRF_ask: 27-33, PRF_nsk: 35-41</td></tr>
+      <tr><td>Merkle trees</td><td><code>src/zcash/IncrementalMerkleTree.hpp</code></td><td>PedersenHash: 232-244, SHA256Compress: 216-230</td></tr>
+      <tr><td>Transaction struct</td><td><code>src/primitives/transaction.h</code></td><td>SpendDescription: 43-85, OutputDescription: 90-130</td></tr>
+      <tr><td>ZIP32 HD keys</td><td><code>src/zcash/zip32.h</code></td><td>SaplingExtendedSpendingKey: 98-135</td></tr>
+      <tr><td>Script interpreter</td><td><code>src/script/interpreter.cpp</code></td><td>OP_CHECKSIG: 660-690, SignatureHash: 1053-1172</td></tr>
+      <tr><td>Consensus limits</td><td><code>src/consensus/consensus.h</code></td><td>MAX_BLOCK_SIZE: 22, MAX_TX_SIZE: 26-27</td></tr>
+      <tr><td>Equihash PoW (192,7)</td><td><code>src/crypto/equihash.h/.cpp</code></td><td>InitialiseState: 32-45, Validate: 145-188</td></tr>
+      <tr><td>Equihash param upgrade</td><td><code>src/consensus/upgrades.cpp</code></td><td>UPGRADE_BUBBLES: lines 78-82 (N=192, K=7)</td></tr>
+      <tr><td>BN254 curve</td><td><code>src/snark/libsnark/.../alt_bn128_init.hpp</code></td><td>Field params: 28-49</td></tr>
+      <tr><td>Chain params</td><td><code>src/chainparams.cpp</code></td><td>Equihash: 133, upgrades: 101-116</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+  <div class="sig">
+    <span class="green">////////////////////////////////////////</span><br>
+    Zclassic Quantum Threat Analysis v1.0<br>
+    Generated 2026-02-12 by Claude Opus 4.6<br>
+    <span class="green">////////////////////////////////////////</span><br><br>
+    "Privacy is necessary for an open society in the electronic age."<br>
+    &mdash; Eric Hughes, A Cypherpunk's Manifesto, 1993<br><br>
+    "We the cypherpunks are dedicated to building anonymous systems.<br>
+    We are defending our privacy with cryptography."<br><br>
+    <span class="green">The quantum clock is ticking. Build or be broken.</span>
+  </div>
+  <div class="pgp">
+    ZCL::QUANTUM_AUDIT // SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  </div>
+</footer>
+
+</div><!-- /container -->
+
+</body>
+</html>
