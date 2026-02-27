@@ -326,8 +326,12 @@
                     <li><strong>BIP-39 Recovery:</strong> 24-word seed phrase backup</li>
                     <li><strong>Open Source:</strong> MIT License - audit the code yourself</li>
                 </ul>
+                <p style="font-size: 10px; margin-top: 12px; font-style: italic;">
+                    "Privacy is not about something to hide. Privacy is about something to protect." — Your keys, your coins, your rules.
+                </p>
                 <div class="download-section">
-                    <a href="#" class="button download-btn" onclick="showCooking(event)">Download ZipherX Mac</a>
+                    <a href="https://github.com/ZipherPunk/ZipherX/releases/latest" class="button download-btn" target="_blank">⬇ Download ZipherX Mac</a>
+                    <a href="https://github.com/ZipherPunk/ZipherX" class="button" target="_blank">◆ Source Code</a>
                 </div>
             </div>
 
@@ -353,7 +357,8 @@
                     "Don't trust, verify." - Local proofs. Multi-peer consensus. Zero trusted servers.
                 </p>
                 <div class="download-section">
-                    <a href="ZipherX.html" class="button download-btn" target="_blank">Learn More</a>
+                    <a href="https://github.com/ZipherPunk/ZipherX" class="button download-btn" target="_blank">◆ Source Code</a>
+                    <a href="ZipherX.html" class="button" target="_blank">Learn More</a>
                 </div>
             </div>
 
@@ -391,41 +396,7 @@
         </div>
     </div>
 
-    <!-- Modal for "Coming Soon" -->
-    <div id="cooking-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-        <div class="window" style="max-width: 400px; margin: 20px;">
-            <div class="title-bar">
-                <div class="close-box" onclick="closeModal()" style="cursor: pointer;"></div>
-                <span class="title">Coming Soon</span>
-            </div>
-            <div class="content" style="text-align: center; padding: 30px;">
-                <div style="font-size: 48px; margin-bottom: 16px;">🔥</div>
-                <p style="font-size: 14px; font-weight: bold; margin-bottom: 12px;">Be patient, we are cooking...</p>
-                <p style="font-size: 11px;">Something powerful is brewing.<br>Privacy takes time to perfect.</p>
-                <button class="button" onclick="closeModal()" style="margin-top: 16px;">OK</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        function showCooking(event) {
-            event.preventDefault();
-            document.getElementById('cooking-modal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('cooking-modal').style.display = 'none';
-        }
-
-        // Close modal on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeModal();
-        });
-
-        // Close modal on background click
-        document.getElementById('cooking-modal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
 
         // Retry state
         let supplyLoaded = false;
