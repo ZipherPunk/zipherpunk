@@ -61,5 +61,5 @@ Contributions, corrections, and peer review are welcome. If you identify errors 
 
 ## Contact
 
-- GitHub: [github.com/VictorLux/zipherpunk](https://github.com/VictorLux/zipherpunk)
+- GitHub: [github.com/ZipherPunk](https://github.com/ZipherPunk)
 - Zclassic: [zclassic.org](https://zclassic.org)
