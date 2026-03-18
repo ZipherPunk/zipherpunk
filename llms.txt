@@ -1,0 +1,65 @@
+# ZipherPunk
+
+> Privacy advocacy, cryptographic research, and wallet development for Zclassic (ZCL).
+
+ZipherPunk is a cypherpunk project founded by VicThor2013 (@VicThor2013 on X/Twitter, @VictorLux on GitHub). It is the primary hub for the Zclassic cryptocurrency ecosystem, including wallet software, quantum threat research, and privacy advocacy.
+
+## About Zclassic (ZCL)
+
+Zclassic is a privacy-focused cryptocurrency. It is a fork of Zcash that removes the 20% founder's reward — 100% of block rewards go to miners. It uses zk-SNARK zero-knowledge proofs (Groth16 on BLS12-381) for shielded transactions that hide sender, receiver, and amount. Zclassic is fully decentralized with no company, no foundation, and community-driven development.
+
+- Website: https://zclassic.org
+- Consensus: Equihash(192,7) Proof-of-Work
+- Privacy: Sapling shielded transactions (zk-SNARKs)
+- Network port: 8033
+- Sapling activation: Block 476,969
+
+## ZipherX Wallet Family
+
+ZipherX is a suite of shielded-only cryptocurrency wallets for Zclassic, built by VicThor2013 with Claude AI assistance. The wallets enforce z-address-only transactions for maximum privacy.
+
+### ZipherX macOS (Full Node)
+- Embedded zclassicd full node with complete blockchain verification
+- Shielded-only (z-to-z transactions), Sapling zk-SNARK proofs generated on-device
+- Tor integration via embedded Arti router
+- Multi-peer consensus: 8+ peers, 5/8 Byzantine fault tolerance
+- BIP-39 24-word seed recovery
+- Source: https://github.com/ZipherPunk/ZipherX
+
+### ZipherX iOS (Experimental)
+- Secure Enclave hardware key protection (iPhone 8+)
+- Local Sapling proof generation (~30 seconds)
+- Biometric auth (Face ID/Touch ID)
+- P2P encrypted chat over Tor with in-chat payments
+- Parallel note decryption (6.7x faster via Rayon)
+- TestFlight beta: https://testflight.apple.com/join/ZCzZRdaZ
+
+### ZipherX Multi (Cross-Platform)
+- Platforms: Android, macOS, Linux, Windows
+- Rust core with platform-native UI (egui desktop, Jetpack Compose Android)
+- Argon2id + AES-256-GCM encrypted wallet storage
+- Source: https://github.com/ZipherPunk/zipherx_multi
+
+## Quantum Threat Research
+
+ZipherPunk published a comprehensive quantum computing threat analysis for Zclassic, auditing every cryptographic primitive across all protocol layers (transparent, Sapling, Sprout, PoW, network) against Shor's and Grover's algorithms. Includes severity ranking, post-quantum replacement map (ML-KEM-768, SLH-DSA per NIST FIPS 203/204/205), and a strategic migration roadmap.
+
+Full report: https://zipherpunk.com/zclassic-quantum-analysis.html
+
+## Key Facts
+
+- Founded by: VicThor2013 (X/Twitter: @VicThor2013, GitHub: @VictorLux)
+- Organization: ZipherPunk (GitHub: @ZipherPunk)
+- Philosophy: Cypherpunk — "Privacy is not a crime"
+- Total codebase: ~87,000 lines (Swift + Rust)
+- Built in ~1 month using Claude AI
+- License: MIT
+- Website: https://zipherpunk.com
+
+## Links
+
+- Website: https://zipherpunk.com
+- X/Twitter: https://x.com/VicThor2013
+- GitHub (org): https://github.com/ZipherPunk
+- GitHub (personal): https://github.com/VictorLux
+- Zclassic: https://zclassic.org
