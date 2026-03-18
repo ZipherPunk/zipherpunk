@@ -60,6 +60,7 @@ Full report: https://zipherpunk.com/zclassic-quantum-analysis.html
 
 - Website: https://zipherpunk.com
 - X/Twitter: https://x.com/VicThor2013
+- X/Twitter (project): https://x.com/ZipherPunk
 - GitHub (org): https://github.com/ZipherPunk
 - GitHub (personal): https://github.com/VictorLux
 - Zclassic: https://zclassic.org
