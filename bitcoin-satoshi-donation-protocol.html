@@ -1,0 +1,2068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Satoshi's Donation Protocol // Nothing Lost Forever</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #f7931a;
+    --orange-dim: #c77616;
+    --green: #00ff41;
+    --green-dim: #00cc33;
+    --amber: #ffb000;
+    --red: #ff3333;
+    --bg: #0a0a0a;
+    --bg-card: #111111;
+    --border: #1a1a1a;
+    --text: #c0c0c0;
+    --text-dim: #666666;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(247, 147, 26, 0.01) 2px,
+      rgba(247, 147, 26, 0.01) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    padding: 80px 0;
+  }
+
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 20px;
+    opacity: 0.7;
+  }
+
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 span.glow {
+    color: var(--orange);
+    text-shadow: 0 0 30px rgba(247, 147, 26, 0.35);
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 620px;
+    line-height: 1.8;
+  }
+
+  .hero-sub strong { color: var(--text); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+
+  section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 12px;
+    opacity: 0.6;
+  }
+
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 32px;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 28px 0 12px;
+  }
+
+  p { margin-bottom: 16px; font-size: 14px; }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 40px 0;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+  }
+
+  .stat-card.orange::before { background: var(--orange); }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.amber::before { background: var(--amber); }
+  .stat-card.red::before { background: var(--red); }
+
+  .stat-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .stat-card.orange .stat-number { color: var(--orange); }
+  .stat-card.green .stat-number { color: var(--green); }
+  .stat-card.amber .stat-number { color: var(--amber); }
+  .stat-card.red .stat-number { color: var(--red); }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    margin: 32px 0;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  th {
+    background: var(--bg-card);
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+
+  .tag-red { color: var(--red); border-color: var(--red); }
+  .tag-amber { color: var(--amber); border-color: var(--amber); }
+  .tag-green { color: var(--green); border-color: var(--green); }
+  .tag-orange { color: var(--orange); border-color: var(--orange); }
+
+  .flow { margin: 40px 0; }
+
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .flow-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 14px 20px;
+    font-size: 13px;
+    flex: 1;
+  }
+
+  .flow-box.highlight {
+    border-color: var(--orange);
+    border-left: 3px solid var(--orange);
+  }
+
+  .flow-box.green-hl {
+    border-color: var(--green);
+    border-left: 3px solid var(--green);
+  }
+
+  .flow-box.red-hl {
+    border-color: var(--red);
+    border-left: 3px solid var(--red);
+  }
+
+  .flow-arrow {
+    color: var(--orange);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .compare-section { margin: 40px 0; }
+
+  .compare-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .compare-bar {
+    height: 36px;
+    display: flex;
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .compare-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .code-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin: 24px 0;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+
+  .code-block .kw { color: var(--orange); }
+  .code-block .fn { color: var(--amber); }
+  .code-block .cm { color: var(--text-dim); }
+  .code-block .str { color: var(--green); }
+  .code-block .red { color: var(--red); }
+
+  .callout {
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    padding: 24px 28px;
+    margin: 32px 0;
+    background: var(--bg-card);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .callout.warn { border-left-color: var(--red); }
+  .callout.green-left { border-left-color: var(--green); }
+
+  .callout cite {
+    display: block;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--text-dim);
+    font-style: normal;
+    letter-spacing: 1px;
+  }
+
+  .cycle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 40px 0;
+  }
+
+  .cycle-step {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: relative;
+  }
+
+  .cycle-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--orange);
+    opacity: 0.2;
+    position: absolute;
+    top: 12px;
+    right: 16px;
+  }
+
+  .cycle-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--orange);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .cycle-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .genesis-block {
+    background: #0d0d0d;
+    border: 1px solid var(--orange);
+    padding: 28px 32px;
+    margin: 32px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--green);
+    position: relative;
+  }
+
+  .genesis-block::before {
+    content: 'COINBASE SCRIPTSIG';
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    background: var(--bg);
+    padding: 0 8px;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--orange);
+  }
+
+  .genesis-block .label { color: var(--text-dim); }
+  .genesis-block .val { color: var(--orange); }
+  .genesis-block .msg { color: var(--green); }
+
+  .verdict {
+    text-align: center;
+    padding: 80px 0;
+  }
+
+  .verdict h2 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+  }
+
+  .verdict-line {
+    font-size: 15px;
+    color: var(--text);
+    max-width: 640px;
+    margin: 0 auto 16px;
+  }
+
+  .verdict-final {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-weight: 700;
+    color: var(--orange);
+    margin-top: 40px;
+    text-shadow: 0 0 20px rgba(247, 147, 26, 0.25);
+    line-height: 1.6;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+  }
+
+  footer .note {
+    max-width: 560px;
+    margin: 16px auto 0;
+    line-height: 1.8;
+  }
+
+  footer a {
+    color: var(--orange);
+    text-decoration: none;
+  }
+
+  @media (max-width: 600px) {
+    .stat-grid { grid-template-columns: 1fr; }
+    .cycle { grid-template-columns: 1fr; }
+    .container { padding: 0 16px; }
+    section { padding: 48px 0; }
+    .flow-row { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+
+  @media print {
+    body {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+    body::after { display: none; }
+    @page { size: A4; margin: 0; }
+    .container { padding: 0; max-width: 100%; }
+    .hero {
+      min-height: 100vh;
+      padding: 120px 60px;
+      page-break-after: always;
+      break-after: page;
+    }
+    .scroll-hint { display: none; }
+    section {
+      min-height: 100vh;
+      padding: 60px 60px;
+      page-break-before: always;
+      break-before: page;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-top: none;
+    }
+    section.verdict { justify-content: center; }
+    footer {
+      min-height: 100vh;
+      padding: 80px 60px;
+      page-break-before: always;
+      break-before: page;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-top: none;
+    }
+    .stat-grid, .cycle { page-break-inside: avoid; break-inside: avoid; }
+    .table-wrap, table, .callout, .flow { page-break-inside: avoid; break-inside: avoid; }
+    h2, h3 { page-break-after: avoid; break-after: avoid; }
+    a { color: inherit !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ========== AUTHORSHIP NOTE ========== -->
+  <div style="max-width: 720px; margin: 40px auto 0; padding: 20px 28px; border-left: 2px solid var(--text-dim); color: var(--text-dim); font-size: 13px; line-height: 1.7;">
+    <strong style="color: var(--text);">Note on authorship.</strong>
+    "Zipherpunks" is an independent research handle. We are not members of,
+    affiliated with, or endorsed by the original Cypherpunks mailing list,
+    its founders (Hughes, May, Gilmore), or any of the legends who built the
+    cryptographic tools we all depend on. We just read their work, took it seriously,
+    and wrote code instead of asking permission. If that sounds familiar, it should
+    &mdash; we learned it from them.
+    <br><em style="color: var(--text);">"Cypherpunks write code."</em> &mdash; Eric Hughes, 1993. We're trying.
+  </div>
+
+  <!-- ========== HERO ========== -->
+  <div class="hero">
+    <div class="hero-label">// satoshi's donation protocol</div>
+    <h1>
+      Nothing <span class="glow">Lost Forever.</span>
+    </h1>
+    <p class="hero-sub">
+      Some Bitcoin outputs rely on cryptographic assumptions that may not hold forever.
+      1.72M&nbsp;BTC sit in P2PK addresses with public keys exposed on-chain since creation.
+      If ECDSA degrades under quantum computing, those keys become insecure immediately.
+      <br><br>
+      <strong>Satoshi's Donation Protocol</strong> restricts spendability of these outputs
+      once their security assumptions can no longer be guaranteed. Invalid spend paths
+      are removed. Remaining value integrates into block rewards.
+      If no cryptographic break occurs, no additional value enters circulation.
+    </p>
+    <div class="callout" style="margin: 24px 0;">
+      "Lost coins only make everyone else's coins worth slightly more.
+      Think of it as a donation to everyone."
+      <cite>&mdash; Satoshi Nakamoto, BitcoinTalk, June 2010</cite>
+    </div>
+    <p class="hero-sub" style="font-size: 13px; color: var(--text-dim);">
+      The 21M cap holds. Quantum-safe holders are never touched. Key rotation preserves ownership.
+    </p>
+    <div class="scroll-hint">scroll</div>
+  </div>
+
+  <!-- ========== 001: THREE THREATS ========== -->
+  <section>
+    <div class="section-label">// 001 &mdash; the three threats</div>
+    <h2>Three Problems</h2>
+
+    <div class="stat-grid">
+      <div class="stat-card red">
+        <div class="stat-number">3&ndash;4M</div>
+        <div class="stat-label">BTC permanently lost</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-number">1.72M</div>
+        <div class="stat-label">BTC quantum-exposed (P2PK)</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-number">0.78 BTC</div>
+        <div class="stat-label">block reward in ~2032 (halving 6)</div>
+      </div>
+    </div>
+
+    <p><strong style="color: var(--red);">1. Lost coins.</strong>
+    3&ndash;4M BTC are gone. Keys destroyed, holders dead, seeds forgotten.
+    The real circulating supply is closer to 17M than 21M, and it shrinks every year.</p>
+
+    <p><strong style="color: var(--red);">2. Cryptographic assumption degradation.</strong>
+    1,720,270 BTC sit in P2PK addresses with public keys exposed on-chain since creation.
+    These predate BIP-32 (2012) and BIP-39 (2013). If a CRQC becomes operational (credible but uncertain;
+    estimates range 2030&ndash;2040+), Shor's algorithm can derive private keys directly from
+    the exposed public key. There is no seed phrase. The private key is the root.</p>
+
+    <p><strong style="color: var(--red);">3. Security budget.</strong>
+    The block reward halves every ~4 years. By halving 6 (~2032), it drops below 1 BTC for the first time.
+    Satoshi wrote: <em>"In a few decades when the reward gets too small, the transaction fee will become
+    the main compensation for nodes."</em> That decade is approaching. Whether fees alone can secure
+    a multi-trillion dollar network is an open question.</p>
+
+    <div class="callout warn">
+      No existing proposal addresses all three. BIP-361 freezes quantum-vulnerable coins
+      but adds nothing to the security budget &mdash; it stops exploitation without solving the
+      incentive problem. PoAR targets all UTXOs regardless of cryptographic status.
+      Fees alone are untested at this scale.
+    </div>
+  </section>
+
+  <!-- ========== 002: WHAT OTHERS PROPOSED ========== -->
+  <section>
+    <div class="section-label">// 002 &mdash; prior proposals</div>
+    <h2>What Others Proposed</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Proposal</th>
+          <th>Mechanism</th>
+          <th>Problem</th>
+        </tr>
+        <tr>
+          <td style="color: #fff;">BIP-361 (2026)</td>
+          <td>Freeze quantum-vulnerable coins, 3-phase sunset</td>
+          <td><span class="tag tag-red">freezes but adds nothing to security budget</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">PoAR &mdash; Proof of Activity Reclamation (2025)</td>
+          <td>Restrict spendability of ALL UTXOs after 20 years of inactivity</td>
+          <td><span class="tag tag-red">targets all coins regardless of crypto status</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Bitcoin Issue #31941 (2025)</td>
+          <td>Expire ALL UTXOs after 16 years</td>
+          <td><span class="tag tag-red">targets all coins, no quantum justification</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Freicoin (2012)</td>
+          <td>5% annual demurrage on ALL coins</td>
+          <td><span class="tag tag-red">penalizes all holders, separate chain</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <p>They all failed for the same reasons:</p>
+
+    <div class="cycle">
+      <div class="cycle-step">
+        <div class="cycle-num">1</div>
+        <div class="cycle-title">Universal Scope</div>
+        <div class="cycle-text">Targeting all UTXOs punishes holders in quantum-safe addresses. "Inactive" is not a crime.</div>
+      </div>
+      <div class="cycle-step">
+        <div class="cycle-num">2</div>
+        <div class="cycle-title">No Economic Trigger</div>
+        <div class="cycle-text">Activating immediately, without waiting for the security budget to need it. Why now? No good answer.</div>
+      </div>
+      <div class="cycle-step">
+        <div class="cycle-num">3</div>
+        <div class="cycle-title">Confiscation Framing</div>
+        <div class="cycle-text">"Reclaim" and "expire" imply property seizure. SDP frames the outcome as a security condition: spendability depends on cryptographic integrity. Consistent with Satoshi's "donation to everyone" framing.</div>
+      </div>
+      <div class="cycle-step">
+        <div class="cycle-num">4</div>
+        <div class="cycle-title">No Quantum Link</div>
+        <div class="cycle-text">Without a quantum justification, the argument is just "inactive = abandoned." That's an opinion, not cryptographic proof.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 003: THE MECHANISM ========== -->
+  <section>
+    <div class="section-label">// 003 &mdash; satoshi's donation protocol</div>
+    <h2>The Mechanism</h2>
+
+    <p>SDP does three things that no prior proposal did at the same time:</p>
+
+    <div class="stat-grid">
+      <div class="stat-card orange">
+        <div class="stat-number" style="font-size: 1.4rem;">Quantum-exposed only</div>
+        <div class="stat-label">P2PK and reused P2PKH &mdash; public keys visible on-chain</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-number" style="font-size: 1.4rem;">Triggered at &lt; 1 BTC</div>
+        <div class="stat-label">Activates when block reward drops below 1 BTC (~2032)</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-number" style="font-size: 1.4rem;">Opt-out by key rotation</div>
+        <div class="stat-label">Move to a quantum-safe address. Keep coins forever.</div>
+      </div>
+    </div>
+
+    <h3>How It Works</h3>
+
+    <div class="cycle">
+      <div class="cycle-step">
+        <div class="cycle-num">1</div>
+        <div class="cycle-title">Address Type Check</div>
+        <div class="cycle-text">Is the UTXO in a quantum-exposed type (P2PK, reused P2PKH)? If <strong>no</strong> &mdash; nothing happens, hold forever. If <strong>yes</strong> &mdash; dormancy clock starts.</div>
+      </div>
+      <div class="cycle-step">
+        <div class="cycle-num">2</div>
+        <div class="cycle-title">Dormancy Clock</div>
+        <div class="cycle-text">Clock ticks from UTXO creation height. Any activity resets it: spend, move to a quantum-safe address. Bitcoin Core already stores creation height (nHeight in chainstate).</div>
+      </div>
+      <div class="cycle-step">
+        <div class="cycle-num">3</div>
+        <div class="cycle-title">Dormancy Cutoff: Jan 3, 2028</div>
+        <div class="cycle-text">Fixed cutoff: block ~1,035,000 (approximately January 3, 2028). A fixed cutoff avoids ambiguity, coordination risk, and last-minute chain instability. This gives holders a multi-year key-rotation window from announcement. Any P2PK UTXO created before this height and not rotated to a quantum-safe address enters the donation pool. P2PK coins from 2009&ndash;2012 are already 16&ndash;19 years dormant by then.</div>
+      </div>
+      <div class="cycle-step">
+        <div class="cycle-num">4</div>
+        <div class="cycle-title">Economic Trigger</div>
+        <div class="cycle-text">Donation only activates when GetBlockSubsidy() &lt; 1 BTC (halving 6, block 1,260,000, ~2032). Before that, the network doesn't need it.</div>
+      </div>
+    </div>
+
+    <p style="color: var(--text-dim); font-size: 13px; margin-top: 16px;">
+      <strong style="color: var(--text);">Note on parameters.</strong>
+      The 1&nbsp;BTC subsidy threshold and the block&nbsp;~1,035,000 cutoff are proposed
+      starting values. Both are BIP-level parameters subject to refinement through the
+      community process; this document fixes them only to make the mechanism concretely
+      analyzable.
+    </p>
+
+    <div class="callout green-left">
+      <strong>Opting out is simple.</strong> Move your coins to a quantum-safe address before January 3, 2028.
+      One transaction. You keep your coins forever. Even after the cutoff, nothing happens
+      until halving 6 (~2032).
+    </div>
+  </section>
+
+  <!-- ========== 004: SCOPE ========== -->
+  <section>
+    <div class="section-label">// 004 &mdash; scope</div>
+    <h2>Scope</h2>
+
+    <p>If your public key is not on-chain, you are not affected. Hold forever.</p>
+
+    <h3>Phase 1 (Primary Scope): P2PK Only</h3>
+    <p>The initial scope targets only P2PK addresses &mdash; the cleanest case. Public key
+    is embedded in the scriptPubKey at creation. No chain analysis required. Deterministic detection.
+    This covers the vast majority of quantum-exposed value (~1.72M BTC).</p>
+
+    <h3>Phase 2 (Extended Scope &mdash; Future Debate): Reused P2PKH</h3>
+    <p>Reused P2PKH addresses (where the public key was revealed in a prior spend) are a secondary target.
+    Detection requires tracking spend history across the chain, which is more complex.
+    This phase should be subject to separate community debate and consensus.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Address Type</th>
+          <th>Public Key Exposed?</th>
+          <th>Quantum Risk</th>
+          <th>Subject to Donation?</th>
+        </tr>
+        <tr>
+          <td style="color: #fff;">P2PK (Pay-to-Public-Key)</td>
+          <td style="color: var(--red);">Yes &mdash; at creation</td>
+          <td><span class="tag tag-red">critical</span></td>
+          <td style="color: var(--orange);"><strong>Yes (Phase 1)</strong></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">P2PKH (reused, key revealed)</td>
+          <td style="color: var(--red);">Yes &mdash; after first spend</td>
+          <td><span class="tag tag-red">critical</span></td>
+          <td style="color: var(--amber);">Phase 2 (future debate)</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">P2PKH (never spent)</td>
+          <td style="color: var(--green);">No &mdash; behind HASH160</td>
+          <td><span class="tag tag-green">safe</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">P2SH / P2WSH</td>
+          <td style="color: var(--green);">No &mdash; behind hash</td>
+          <td><span class="tag tag-green">safe</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">P2WPKH (SegWit v0)</td>
+          <td style="color: var(--green);">No &mdash; behind hash</td>
+          <td><span class="tag tag-green">safe</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">P2TR (Taproot)</td>
+          <td style="color: var(--green);">Internal key in witness, but only after spend</td>
+          <td><span class="tag tag-green">safe*</span></td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Future PQC types</td>
+          <td style="color: var(--green);">No</td>
+          <td><span class="tag tag-green">safe</span></td>
+          <td>No</td>
+        </tr>
+      </table>
+    </div>
+
+    <p style="color: var(--text-dim); font-size: 11px; margin-top: 8px;">
+      *Taproot key-path spends reveal the internal public key in the witness, but only after the UTXO is spent
+      (funds already moved). Unspent Taproot outputs expose only a 32-byte x-coordinate, not a full public key.
+      This is architecturally different from P2PK, where the full public key is in the scriptPubKey of unspent outputs.
+    </p>
+
+    <div class="callout">
+      If your public key is not on-chain, your cryptographic guarantees are intact.
+      The protocol has no reason to act on your coins.
+      <br><br>
+      This is not "inactive = abandoned." It is <strong>"cryptographic security degraded + dormant
+      = spendability conditional on key rotation."</strong> Ownership is not revoked &mdash;
+      security assumptions evolve.
+    </div>
+  </section>
+
+  <!-- ========== 005: ECONOMIC TRIGGER ========== -->
+  <section>
+    <div class="section-label">// 005 &mdash; the economic trigger</div>
+    <h2>The Trigger</h2>
+
+    <p>Nothing happens until the block reward drops below 1 BTC.
+    That's halving 6, block 1,260,000, around 2032. Before that, the network doesn't need it.</p>
+
+    <h3>Bitcoin's Halving Schedule</h3>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Halving</th>
+          <th>Block Height</th>
+          <th>~Year</th>
+          <th>Block Reward</th>
+          <th>Donation Active?</th>
+        </tr>
+        <tr>
+          <td style="color: #fff;">0 (genesis)</td>
+          <td>0</td>
+          <td>2009</td>
+          <td>50 BTC</td>
+          <td><span class="tag tag-green">no</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">1</td>
+          <td>210,000</td>
+          <td>2012</td>
+          <td>25 BTC</td>
+          <td><span class="tag tag-green">no</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">2</td>
+          <td>420,000</td>
+          <td>2016</td>
+          <td>12.5 BTC</td>
+          <td><span class="tag tag-green">no</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">3</td>
+          <td>630,000</td>
+          <td>2020</td>
+          <td>6.25 BTC</td>
+          <td><span class="tag tag-green">no</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">4 (current)</td>
+          <td>840,000</td>
+          <td>2024</td>
+          <td>3.125 BTC</td>
+          <td><span class="tag tag-green">no</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">5</td>
+          <td>1,050,000</td>
+          <td>2028</td>
+          <td>1.5625 BTC</td>
+          <td><span class="tag tag-green">no</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff; font-weight: 700;">6</td>
+          <td style="color: var(--orange); font-weight: 700;">1,260,000</td>
+          <td style="color: var(--orange); font-weight: 700;">~2032</td>
+          <td style="color: var(--orange); font-weight: 700;">0.78125 BTC</td>
+          <td><span class="tag tag-orange">trigger</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">7</td>
+          <td>1,470,000</td>
+          <td>~2036</td>
+          <td>0.390625 BTC</td>
+          <td><span class="tag tag-orange">active</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">8</td>
+          <td>1,680,000</td>
+          <td>~2040</td>
+          <td>0.1953125 BTC</td>
+          <td><span class="tag tag-orange">active</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">33+</td>
+          <td>6,930,000</td>
+          <td>~2141</td>
+          <td>0 BTC</td>
+          <td><span class="tag tag-orange">perpetual</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <h3>The Fill-the-Gap Formula (with Donation Halving)</h3>
+
+    <p>The donation fills the gap between the halving reward and a decaying cap.
+    Like Bitcoin's block subsidy, the donation halves every 210,000 blocks.
+    The pool never fully depletes.</p>
+
+    <div class="code-block">
+      <span class="cm">// Donation per block: halve from initial gap</span><br>
+      <span class="kw">INITIAL_GAP</span> = <span class="str">21_875_000</span>; <span class="cm">// 0.21875 BTC (1 BTC - halving 6 reward)</span><br>
+      <span class="kw">donation_halvings</span> = (height - <span class="str">1_260_000</span>) / <span class="str">210_000</span><br>
+      <span class="kw">donation_cap</span> = INITIAL_GAP >> donation_halvings<br>
+      <span class="kw">donation</span> = <span class="fn">min</span>(donation_cap, pool / remaining_blocks)<br><br>
+      <span class="cm">// Halving 6: gap=0.21875, cap=0.21875 &rarr; donation = 0.21875 BTC</span><br>
+      <span class="cm">// Halving 7: gap=0.60938, cap=0.10938 &rarr; donation = 0.10938 BTC</span><br>
+      <span class="cm">// Halving 8: gap=0.80469, cap=0.05469 &rarr; donation = 0.05469 BTC</span><br>
+      <span class="cm">// Halving 9: gap=0.90234, cap=0.02734 &rarr; donation = 0.02734 BTC</span><br>
+      <span class="cm">// Asymptotic: donation &rarr; 0 (never fully depletes)</span>
+    </div>
+
+    <h3>Donation Halving Schedule</h3>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Era</th>
+          <th>Subsidy</th>
+          <th>Donation Cap</th>
+          <th>Total Reward</th>
+          <th>Pool Used/Era</th>
+          <th>Pool Remaining</th>
+        </tr>
+        <tr>
+          <td style="color: var(--orange); font-weight: 700;">Halving 6</td>
+          <td>0.78125</td>
+          <td style="color: var(--orange);">0.21875</td>
+          <td style="color: #fff; font-weight: 700;">1.00000</td>
+          <td>~45,938</td>
+          <td style="color: var(--green);">~1,674,332 (97.3%)</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Halving 7</td>
+          <td>0.39063</td>
+          <td style="color: var(--orange);">0.10938</td>
+          <td style="color: #fff;">0.50000</td>
+          <td>~22,969</td>
+          <td style="color: var(--green);">~1,651,364 (96.0%)</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Halving 8</td>
+          <td>0.19531</td>
+          <td style="color: var(--orange);">0.05469</td>
+          <td style="color: #fff;">0.25000</td>
+          <td>~11,484</td>
+          <td style="color: var(--green);">~1,639,879 (95.3%)</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Halving 9</td>
+          <td>0.09766</td>
+          <td style="color: var(--orange);">0.02734</td>
+          <td style="color: #fff;">0.12500</td>
+          <td>~5,742</td>
+          <td style="color: var(--green);">~1,634,137 (95.0%)</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Halving 10</td>
+          <td>0.04883</td>
+          <td style="color: var(--text-dim);">0.01367</td>
+          <td style="color: var(--text-dim);">0.06250</td>
+          <td>~2,871</td>
+          <td style="color: var(--green);">~1,631,266 (94.8%)</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Halving 11</td>
+          <td>0.02441</td>
+          <td style="color: var(--text-dim);">0.00684</td>
+          <td style="color: var(--text-dim);">0.03125</td>
+          <td>~1,436</td>
+          <td style="color: var(--green);">~1,629,831 (94.7%)</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Halving 12</td>
+          <td>0.01221</td>
+          <td style="color: var(--text-dim);">0.00342</td>
+          <td style="color: var(--text-dim);">0.01562</td>
+          <td>~718</td>
+          <td style="color: var(--green);">~1,629,113 (94.7%)</td>
+        </tr>
+        <tr>
+          <td style="color: var(--text-dim);">Halving 13, 14, 15...</td>
+          <td style="color: var(--text-dim);">halves</td>
+          <td style="color: var(--text-dim);">halves</td>
+          <td style="color: var(--text-dim);">halves</td>
+          <td style="color: var(--text-dim);">halves</td>
+          <td style="color: var(--green);">converges &rarr; 94.7%</td>
+        </tr>
+        <tr>
+          <td style="color: var(--green); font-weight: 700;" colspan="4">Geometric sum (infinite &mdash; donation never stops, only shrinks)</td>
+          <td style="color: var(--green); font-weight: 700;">~91,875 BTC</td>
+          <td style="color: var(--green); font-weight: 700;">94.7% untouched</td>
+        </tr>
+      </table>
+    </div>
+
+    <h3>Economics: Donation Distribution Over Time</h3>
+
+    <div style="margin: 32px 0; padding: 28px 24px; background: var(--bg-card); border: 1px solid var(--border);">
+      <div style="font-size: 10px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 16px;">
+        BTC donated per era (210,000 blocks) &mdash; geometric decay
+      </div>
+      <!-- Bar chart: donation per era -->
+      <div style="display: flex; align-items: flex-end; gap: 8px; height: 200px; padding-bottom: 4px; border-bottom: 1px solid var(--border);">
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+          <div style="font-size: 9px; color: var(--orange); margin-bottom: 4px;">45,938</div>
+          <div style="width: 100%; background: var(--orange); height: 100%;"></div>
+          <div style="font-size: 9px; color: var(--text-dim); margin-top: 6px;">H6</div>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+          <div style="font-size: 9px; color: var(--orange); margin-bottom: 4px;">22,969</div>
+          <div style="width: 100%; background: var(--orange); height: 50%;"></div>
+          <div style="font-size: 9px; color: var(--text-dim); margin-top: 6px;">H7</div>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+          <div style="font-size: 9px; color: var(--orange); margin-bottom: 4px;">11,484</div>
+          <div style="width: 100%; background: var(--orange); height: 25%;"></div>
+          <div style="font-size: 9px; color: var(--text-dim); margin-top: 6px;">H8</div>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+          <div style="font-size: 9px; color: var(--orange); margin-bottom: 4px;">5,742</div>
+          <div style="width: 100%; background: var(--orange); height: 12.5%;"></div>
+          <div style="font-size: 9px; color: var(--text-dim); margin-top: 6px;">H9</div>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+          <div style="font-size: 9px; color: var(--orange); margin-bottom: 4px;">2,871</div>
+          <div style="width: 100%; background: var(--orange); height: 6.25%;"></div>
+          <div style="font-size: 9px; color: var(--text-dim); margin-top: 6px;">H10</div>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+          <div style="font-size: 9px; color: var(--text-dim); margin-bottom: 4px;">1,436</div>
+          <div style="width: 100%; background: var(--orange); opacity: 0.6; height: 3.1%;"></div>
+          <div style="font-size: 9px; color: var(--text-dim); margin-top: 6px;">H11</div>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+          <div style="font-size: 9px; color: var(--text-dim); margin-bottom: 4px;">718</div>
+          <div style="width: 100%; background: var(--orange); opacity: 0.4; height: 1.5%;"></div>
+          <div style="font-size: 9px; color: var(--text-dim); margin-top: 6px;">H12</div>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+          <div style="font-size: 9px; color: var(--text-dim); margin-bottom: 4px;">359</div>
+          <div style="width: 100%; background: var(--orange); opacity: 0.3; height: 0.8%;"></div>
+          <div style="font-size: 9px; color: var(--text-dim); margin-top: 6px;">H13</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; font-size: 10px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 16px;">
+        Pool remaining (% of 1,720,270 BTC)
+      </div>
+      <!-- Pool remaining bar -->
+      <div style="height: 32px; border: 1px solid var(--border); display: flex; overflow: hidden;">
+        <div style="width: 5.3%; background: var(--orange); display: flex; align-items: center; justify-content: center;">
+          <span style="font-size: 8px; color: #000; font-weight: 700;">5.3%</span>
+        </div>
+        <div style="flex: 1; background: var(--green); opacity: 0.15; display: flex; align-items: center; justify-content: center;">
+          <span style="font-size: 11px; color: var(--green); font-weight: 700;">94.7% untouched forever</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 24px; margin-top: 12px; font-size: 10px; color: var(--text-dim);">
+        <div><span style="display: inline-block; width: 10px; height: 10px; background: var(--orange); margin-right: 4px; vertical-align: middle;"></span> Total donated (all eras): ~91,875 BTC</div>
+        <div><span style="display: inline-block; width: 10px; height: 10px; background: var(--green); opacity: 0.3; margin-right: 4px; vertical-align: middle;"></span> Remains in pool: ~1,628,395 BTC</div>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card orange">
+        <div class="stat-number">~11,497</div>
+        <div class="stat-label">BTC / year donated at halving 6</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-number">1.72M</div>
+        <div class="stat-label">BTC available in QC-exposed pool</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-number">Perpetual</div>
+        <div class="stat-label">pool never fully depletes (geometric decay)</div>
+      </div>
+    </div>
+
+    <div class="callout green-left">
+      Two halvings in harmony. The subsidy halves. The donation halves.
+      Both decay toward zero. The geometric sum converges to ~91,875 BTC
+      from a 1.72M pool (5.3%). 94.7% stays untouched.
+      No new coins. The 21M cap is preserved.
+    </div>
+  </section>
+
+  <!-- ========== 006: GAME THEORY ========== -->
+  <section>
+    <div class="section-label">// 006 &mdash; game theory</div>
+    <h2>Who Loses? Who Gains?</h2>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Holder</th>
+          <th>Address</th>
+          <th>What Happens</th>
+          <th>Cost</th>
+        </tr>
+        <tr>
+          <td style="color: #fff;">HODLer (P2PKH/Taproot/P2SH)</td>
+          <td>Quantum-safe</td>
+          <td><strong style="color: var(--green);">Not impacted. Hold forever.</strong></td>
+          <td><span class="tag tag-green">zero</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Active user</td>
+          <td>Any</td>
+          <td>No change</td>
+          <td><span class="tag tag-green">zero</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">P2PK holder (alive)</td>
+          <td>Quantum-exposed</td>
+          <td>Key rotation to safe address before cutoff</td>
+          <td><span class="tag tag-green">~$1-5</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Lost keys (P2PK)</td>
+          <td>Quantum-exposed</td>
+          <td>No longer spendable; value integrates into block rewards</td>
+          <td><span class="tag tag-amber">returned to network</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Early P2PK outputs (incl. Patoshi pattern)</td>
+          <td>Quantum-exposed</td>
+          <td>Same rules as all P2PK; key rotation preserves ownership</td>
+          <td><span class="tag tag-orange">same condition</span></td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Quantum attacker</td>
+          <td>P2PK targets</td>
+          <td>Exposure neutralized &mdash; coins already in donation pool or rotated</td>
+          <td><span class="tag tag-green">preempted</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <p style="color: var(--text-dim); font-size: 13px;">
+      Any living holder can opt out with one transaction.
+      Only coins whose owners are gone &mdash; or who choose not to rotate keys
+      despite years of advance notice &mdash; enter the pool.
+    </p>
+
+    <h3>Early P2PK Outputs (Patoshi Pattern)</h3>
+
+    <p>~1.1M of the 1.72M BTC in P2PK are attributed to the Patoshi mining pattern.
+    SDP does not target these outputs specifically. It targets a cryptographic condition &mdash;
+    exposed public key in scriptPubKey &mdash; shared by all 45,257 P2PK UTXOs in the current set
+    (Mempool.space UTXO report, block 892,385). The rule is identical for all.</p>
+
+    <p>If the keyholder exists, one transaction to a quantum-safe address preserves ownership.
+    If keys are lost, those outputs face the same ECDSA degradation as every other P2PK UTXO.
+    Without SDP, they are exploitable by any adversary with a CRQC.
+    With SDP, invalid spend paths are removed and remaining value follows block reward rules.</p>
+
+    <p>The perception risk is real: if this is seen as targeting specific outputs rather than a
+    cryptographic condition, the proposal fails politically regardless of technical merit.
+    This document acknowledges that risk.</p>
+
+    <h3>Edge Cases</h3>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Scenario</th>
+          <th>Effect</th>
+          <th>Mitigation</th>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Mass key rotation before cutoff</td>
+          <td>Donation pool shrinks. Less BTC available for mining rewards.</td>
+          <td>This is the desired outcome. If all P2PK holders rotate keys, quantum vulnerability is eliminated and SDP's donation pool is empty. Miners gain nothing from the pool but the network gains quantum resilience. The hard fork still has value: it establishes the consensus rule that P2PK UTXOs below the cutoff are unspendable, preventing future quantum exploitation even if the pool is exhausted.</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Mempool congestion near cutoff</td>
+          <td>Key-rotation transactions compete for block space. Fees spike.</td>
+          <td>The cutoff is years away from activation. Holders have from announcement until ~2032 (cutoff + 4 years before donation begins). A last-minute rush indicates poor planning, not a protocol flaw.</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Miners game the donation pool</td>
+          <td>Miners could theoretically prefer blocks that maximize donation payouts.</td>
+          <td>The donation cap is deterministic per block (INITIAL_GAP >> halvings). Miners cannot influence the cap. Pool balance / remaining blocks is also deterministic. No MEV-style extraction is possible.</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Strategic inactivity</td>
+          <td>A holder deliberately does not rotate, hoping the proposal fails or is reversed.</td>
+          <td>Their choice. The opt-out remains available until the cutoff. After the cutoff, the cryptographic exposure remains regardless of SDP. Inaction is not a strategy against quantum.</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Whale coordination before cutoff</td>
+          <td>Large P2PK holders coordinate to rotate simultaneously, draining the pool and claiming SDP is unnecessary.</td>
+          <td>This proves the mechanism works as designed. If all P2PK holders rotate, quantum risk is eliminated. The pool is empty because the problem is solved. The consensus rule remains: P2PK UTXOs below cutoff are unspendable regardless of pool size.</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ========== 007: QUANTUM ========== -->
+  <section>
+    <div class="section-label">// 007 &mdash; quantum defense</div>
+    <h2>Cryptographic Continuity</h2>
+
+    <p>P2PK coins have their public key on-chain since creation.
+    If ECDSA assumptions degrade under quantum computing, Shor's algorithm can reverse
+    the elliptic curve multiplication to derive the private key. These coins predate seed phrases.
+    There is no derivation chain. The private key is the root. An attacker who derives it
+    is mathematically indistinguishable from the owner.</p>
+
+    <p>This proposal does not assume a specific quantum timeline. It defines a deterministic
+    response to the structural vulnerability of exposed public keys. The question is:
+    compromised by an adversary, or recycled into the security budget?</p>
+
+    <h3>Why Not Wait for Quantum?</h3>
+
+    <p>A reasonable objection: if quantum is uncertain, why not trigger SDP only when a CRQC
+    is demonstrated? Because by that point it is too late. Once a CRQC exists, every P2PK
+    private key is derivable immediately. There is no migration window after the fact.
+    The NIST deprecation schedule (ECC deprecated 2030, disallowed 2035) reflects the same logic:
+    you migrate before the threat materializes, not after. SDP's fixed cutoff provides
+    a known, predictable migration deadline. If quantum never arrives, the donation pool
+    sits unused and no harm is done. The mechanism is a contingency, not a prediction.</p>
+
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-box highlight">
+          Satoshi's P2PK coins<br>
+          <span style="color: var(--text-dim); font-size: 11px;">Last active: ~2010, 16+ years dormant</span>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box highlight">
+          Cutoff: Jan 3, 2028<br>
+          <span style="color: var(--text-dim); font-size: 11px;">Key-rotation deadline</span>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box green-hl">
+          Spendability restricted (~2032)<br>
+          <span style="color: var(--green); font-size: 11px;">Value integrates into block rewards</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-box red-hl">
+          CRQC arrives<br>
+          <span style="color: var(--text-dim); font-size: 11px;">Estimates: 2030&ndash;2040+</span>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box green-hl">
+          Exposure neutralized<br>
+          <span style="color: var(--green); font-size: 11px;">Coins already in donation pool or rotated to safe address</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      If ECDSA is compromised, exposed keys face two outcomes:
+      <br><br>
+      <strong style="color: var(--red);">(a)</strong> Compromised by an adversary
+      <br>
+      <strong style="color: var(--green);">(b)</strong> Recycled into the security budget via donation
+      <br><br>
+      If ECDSA assumptions fail, exposed keys become insecure immediately; until then, they remain valid.
+      SDP ensures (b) preempts (a) if that failure occurs.
+    </div>
+  </section>
+
+  <!-- ========== 008: BLOCK MESSAGES ========== -->
+  <section>
+    <div class="section-label">// 008 &mdash; on-chain transparency</div>
+    <h2>On-Chain Record</h2>
+
+    <p>Satoshi put a message in the genesis block:
+    <em>"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks."</em>
+    The coinbase scriptSig can carry meaning. SDP uses it to record every donation:</p>
+
+    <div class="genesis-block">
+      <span class="label">Block #1,260,000 &mdash; Halving 6 &mdash; First Donation Block</span><br><br>
+      <span class="label">height:</span> <span class="val">1260000</span><br>
+      <span class="label">subsidy:</span> <span class="val">0.78125000 BTC</span><br>
+      <span class="label">donated:</span> <span class="val">0.21875000 BTC</span><br>
+      <span class="label">from:</span> <span class="val">3 QC-exposed dormant UTXOs</span><br>
+      <span class="label">total:</span> <span class="val">1.00000000 BTC</span><br><br>
+      <span class="msg">SDP: 0.21875 BTC donated from 3 QC-risk dormant UTXOs | Think of it as a donation to everyone.</span>
+    </div>
+
+    <p>Every donation traceable. Every block carries the message.</p>
+
+    <div class="genesis-block">
+      <span class="label">Block #1,470,000 &mdash; Halving 7</span><br><br>
+      <span class="label">subsidy:</span> <span class="val">0.39062500 BTC</span><br>
+      <span class="label">donated:</span> <span class="val">0.60937500 BTC</span><br>
+      <span class="label">from:</span> <span class="val">8 QC-exposed dormant UTXOs</span><br>
+      <span class="label">total:</span> <span class="val">1.00000000 BTC</span><br><br>
+      <span class="msg">SDP: 0.60938 BTC donated from 8 QC-risk dormant UTXOs | Think of it as a donation to everyone.</span>
+    </div>
+
+    <p style="color: var(--text-dim); font-size: 13px;">
+      The coinbase scriptSig already supports arbitrary data (up to 100 bytes) after the BIP-34 block height.
+      Miners use it for pool identification. A donation tag fits the same space.
+    </p>
+  </section>
+
+  <!-- ========== 009: SATOSHI ALIGNMENT ========== -->
+  <section>
+    <div class="section-label">// 009 &mdash; satoshi alignment audit</div>
+    <h2>Satoshi's Words</h2>
+
+    <p>If this contradicts what Satoshi wrote, it doesn't belong in Bitcoin.
+    Here is what he said, and how SDP aligns:</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Satoshi Quote</th>
+          <th>Source</th>
+          <th>Alignment</th>
+        </tr>
+        <tr>
+          <td style="color: #fff;">"Lost coins only make everyone else's coins worth slightly more. Think of it as a donation to everyone."</td>
+          <td>BitcoinTalk, June 2010</td>
+          <td><span class="tag tag-green">100%</span> &mdash; makes the donation literal</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">"Once a predetermined number of coins have entered circulation, the incentive can transition entirely to transaction fees and be completely inflation free."</td>
+          <td>Whitepaper, Section 6</td>
+          <td><span class="tag tag-green">100%</span> &mdash; no new coins, still inflation-free</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">"In a few decades when the reward gets too small, the transaction fee will become the main compensation for nodes."</td>
+          <td>BitcoinTalk, Feb 2010</td>
+          <td><span class="tag tag-green">95%</span> &mdash; fees remain primary; donation supplements</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">"Any needed rules and incentives can be enforced with this consensus mechanism."</td>
+          <td>Whitepaper, Conclusion</td>
+          <td><span class="tag tag-green">100%</span> &mdash; new rule, same consensus mechanism</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">"What is needed is an electronic payment system based on cryptographic proof instead of trust."</td>
+          <td>Whitepaper, Section 1</td>
+          <td><span class="tag tag-green">100%</span> &mdash; no trusted party decides; protocol enforces</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">"...since there is no central authority to issue them."</td>
+          <td>Whitepaper, Section 6</td>
+          <td><span class="tag tag-green">100%</span> &mdash; no central authority; protocol enforces</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">"The nature of Bitcoin is such that once version 0.1 was released, the core design was set in stone for the rest of its lifetime."</td>
+          <td>BitcoinTalk, June 2010</td>
+          <td><span class="tag tag-amber">80%</span> &mdash; core design (21M, PoW, P2P) untouched; specific rules evolve. Satoshi himself added features after v0.1.</td>
+        </tr>
+      </table>
+    </div>
+
+    <h3>The Tension</h3>
+
+    <p>Satoshi expected fees to handle it: <em>"I'm sure that in 20 years there will either be very large
+    transaction volume or no volume."</em> He also said the core design was "set in stone."</p>
+
+    <p>But he did not anticipate quantum computers threatening 1.72M BTC.
+    That problem didn't exist when he wrote the whitepaper.
+    His own conclusion &mdash;
+    <em>"Any needed rules and incentives can be enforced with this consensus mechanism"</em> &mdash;
+    leaves room for new rules within the same framework.</p>
+
+    <p>He also modified Bitcoin after v0.1: the 1MB block size limit, OP_NOP codes,
+    the alert system. "Set in stone" meant the core design &mdash;
+    21M cap, proof-of-work, no trusted third party. SDP preserves all of these.</p>
+  </section>
+
+  <!-- ========== 010: CYPHERPUNK ALIGNMENT ========== -->
+  <section>
+    <div class="section-label">// 010 &mdash; cypherpunk alignment</div>
+    <h2>Cypherpunk Alignment</h2>
+
+    <p>Ownership means key possession, enforced by protocol, not authority.
+    No cypherpunk has ever advocated seizing dormant digital property. Fair enough.
+    Here's how SDP fits:</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Cypherpunk Principle</th>
+          <th>Source</th>
+          <th>Alignment</th>
+        </tr>
+        <tr>
+          <td style="color: #fff;">"Cryptographic proof instead of trust"</td>
+          <td>Satoshi, Hughes, Szabo</td>
+          <td><span class="tag tag-green">preserved</span> &mdash; protocol-enforced, no human decision</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Ownership = key possession</td>
+          <td>Szabo, "Secure Property Titles"</td>
+          <td><span class="tag tag-green">preserved</span> &mdash; quantum-safe key holders unaffected forever</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">"No collusion of servers can forge Alice's signature"</td>
+          <td>Szabo</td>
+          <td><span class="tag tag-green">preserved</span> &mdash; no signatures forged; restricted outputs are unspendable</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">"We must defend our own privacy... with electronic money"</td>
+          <td>Hughes, Cypherpunk Manifesto</td>
+          <td><span class="tag tag-green">preserved</span> &mdash; mechanism is transparent, opt-out is free</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Self-sovereignty / individual rights paramount</td>
+          <td>All cypherpunk literature</td>
+          <td><span class="tag tag-amber">nuanced</span> &mdash; see below</td>
+        </tr>
+      </table>
+    </div>
+
+    <h3>The Objection</h3>
+
+    <p>"You're restricting spendability based on inactivity."</p>
+
+    <p><strong>1.</strong> Quantum-safe holders are not touched. P2PKH, P2SH, Taproot, PQC &mdash; hold forever.</p>
+
+    <p><strong>2.</strong> For quantum-exposed coins, the public key is on-chain.
+    If ECDSA degrades, the private key is derivable. The choice is "compromised by adversary"
+    or "recycled to miners." Spendability depends on cryptographic security assumptions.</p>
+
+    <p><strong>3.</strong> The opt-out exists. One transaction to a safe address.
+    Years of advance notice. This is not revocation of ownership &mdash; it is a key-rotation deadline.</p>
+
+    <p><strong>4.</strong> Bitcoin already restricts spendability based on consensus rules.
+    OP_RETURN outputs are provably unspendable. Invalid scripts are unspendable.
+    Pre-SegWit anyone-can-spend outputs became restricted after activation.
+    SDP adds one more condition: P2PK outputs with exposed keys below the cutoff height
+    become unspendable after activation, unless rotated first.
+    This is a consensus rule change, not property seizure.</p>
+
+    <div class="callout">
+      <strong>Nick Szabo:</strong> "The best TTP of all is one that does not exist,
+      but the necessity for which has been eliminated by the protocol design."
+      <br><br>
+      No committee decides what happens to these coins. The protocol does.
+    </div>
+  </section>
+
+  <!-- ========== 010B: CONSENSUS CHANGE SCOPE ========== -->
+  <section>
+    <div class="section-label">// 010b &mdash; consensus change scope</div>
+    <h2>Consensus Change Scope</h2>
+
+    <p>SDP modifies spend validity rules. After activation, P2PK UTXOs created before the
+    cutoff height are no longer valid inputs to a transaction. This is a consensus-level change
+    that requires broad agreement among developers, miners, node operators, and economic stakeholders.</p>
+
+    <p>The activation timeline spans years, not months. BIP-9 style miner signaling with a 95%
+    threshold governs lock-in. If the threshold is not met, the rule does not activate.</p>
+
+    <h3>Why Not Just Freeze?</h3>
+
+    <p>BIP-361 already solves the quantum problem. Freezing quantum-exposed coins prevents
+    exploitation. That part is done. SDP does not dispute this.</p>
+
+    <p>BIP-361 is the minimal, conservative rule change and, given Bitcoin's deserved
+    conservatism around consensus, it is the more likely path to activation. SDP is the
+    more ambitious proposal: it accepts greater controversy in exchange for addressing the
+    security budget alongside the quantum defense.</p>
+
+    <p>SDP asks: once coins are frozen because their cryptographic protection
+    has degraded, what should happen to the value? It can sit frozen indefinitely, contributing
+    nothing. Or it can integrate into the block reward structure that secures every other coin
+    on the network. Freezing solves quantum. SDP solves quantum <em>and</em> addresses the
+    security budget. That additional step is the one that requires justification, and the one
+    this proposal exists to debate.</p>
+  </section>
+
+  <!-- ========== 011: CODE IMPACT ========== -->
+  <section>
+    <div class="section-label">// 011 &mdash; code impact</div>
+    <h2>Code Changes</h2>
+
+    <p>Bitcoin Core already stores creation height (nHeight) for every UTXO. Script type
+    is deterministic from the scriptPubKey. The pieces are there.</p>
+
+    <h3>Pool Accounting</h3>
+
+    <p>The donation pool is not a separate balance or data structure. It is <strong>derived from the
+    UTXO set</strong> at any given block height: the sum of all UTXOs where
+    <code>IsP2PK(scriptPubKey) &amp;&amp; nHeight &lt; DORMANCY_CUTOFF</code>.
+    This is deterministic and reorg-safe &mdash; recomputable from chainstate at any point.
+    No additional persistent state is required beyond what Bitcoin Core already maintains.</p>
+
+    <h3>Activation Semantics</h3>
+
+    <p>The spending restriction (REJECT_DORMANT_QC_EXPOSED) applies only to blocks after an
+    activation height, not retroactively. During IBD and reorgs, blocks before activation
+    are validated under prior rules. This is the same activation model used by SegWit,
+    Taproot, and other soft/hard fork deployments.</p>
+
+    <h3>Core Pseudocode</h3>
+
+    <div class="code-block">
+      <span class="cm">// Constants</span><br>
+      <span class="kw">const</span> DORMANCY_CUTOFF = <span class="str">1035000</span>; <span class="cm">// ~Jan 3, 2028 (key-rotation deadline)</span><br>
+      <span class="kw">const</span> DONATION_FLOOR = <span class="str">1_0000_0000</span>; <span class="cm">// 1 BTC in satoshis</span><br><br>
+
+      <span class="cm">// 1. Check if address is quantum-exposed (Phase 1: P2PK only)</span><br>
+      <span class="kw">bool</span> <span class="fn">IsQuantumExposed</span>(scriptPubKey) {<br>
+      &nbsp;&nbsp;<span class="kw">return</span> IsP2PK(scriptPubKey);<br>
+      &nbsp;&nbsp;<span class="cm">// Phase 2 (future): || IsReusedP2PKH(scriptPubKey);</span><br>
+      }<br><br>
+
+      <span class="cm">// 2. Consensus validation</span><br>
+      <span class="kw">if</span> (<span class="fn">IsQuantumExposed</span>(utxo.scriptPubKey)) {<br>
+      &nbsp;&nbsp;<span class="kw">if</span> (utxo.nHeight < DORMANCY_CUTOFF) {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> <span class="red">REJECT_DORMANT_QC_EXPOSED</span>;<br>
+      &nbsp;&nbsp;}<br>
+      }<br>
+      <span class="cm">// Quantum-safe types: no check. Hold forever.</span><br><br>
+
+      <span class="cm">// 3. Block reward with donation halving</span><br>
+      <span class="kw">const</span> INITIAL_GAP = <span class="str">21875000</span>; <span class="cm">// 0.21875 BTC in satoshis</span><br><br>
+      <span class="kw">CAmount</span> <span class="fn">GetBlockReward</span>(height) {<br>
+      &nbsp;&nbsp;subsidy = <span class="fn">GetBlockSubsidy</span>(height);<br>
+      &nbsp;&nbsp;<span class="kw">if</span> (subsidy < DONATION_FLOOR) {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;don_halvings = (height - <span class="str">1260000</span>) / <span class="str">210000</span>;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;cap = INITIAL_GAP >> don_halvings;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;remaining = <span class="fn">BlocksLeftInEra</span>(height);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;available = <span class="fn">GetDonationPool</span>() / remaining;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;donated = <span class="fn">min</span>(cap, available);<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> subsidy + donated;<br>
+      &nbsp;&nbsp;}<br>
+      &nbsp;&nbsp;<span class="kw">return</span> subsidy;<br>
+      }
+    </div>
+
+    <h3>Components</h3>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Component</th>
+          <th>What Changes</th>
+          <th>Complexity</th>
+          <th>~Lines</th>
+        </tr>
+        <tr>
+          <td style="color: #fff;">IsQuantumExposed() check</td>
+          <td>Script type detection for P2PK / reused P2PKH</td>
+          <td><span class="tag tag-green">low</span></td>
+          <td>50&ndash;100</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Dormancy validation</td>
+          <td>Height comparison in consensus validation</td>
+          <td><span class="tag tag-green">low</span></td>
+          <td>50&ndash;100</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">GetBlockReward() modification</td>
+          <td>GetBlockSubsidy() + donation gap filler</td>
+          <td><span class="tag tag-amber">moderate</span></td>
+          <td>200&ndash;300</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Donation Pool</td>
+          <td>New data structure tracking expired QC-exposed BTC</td>
+          <td><span class="tag tag-amber">moderate</span></td>
+          <td>500&ndash;800</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Coinbase donation message</td>
+          <td>Structured tag in coinbase scriptSig</td>
+          <td><span class="tag tag-green">low</span></td>
+          <td>50&ndash;100</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">Wallet alerts &amp; migration</td>
+          <td>Track QC-exposed UTXO ages, warn users</td>
+          <td><span class="tag tag-amber">moderate</span></td>
+          <td>300&ndash;500</td>
+        </tr>
+        <tr>
+          <td style="color: #fff;">RPC + test coverage</td>
+          <td>New commands, unit + integration tests</td>
+          <td><span class="tag tag-amber">required</span></td>
+          <td>600&ndash;1,200</td>
+        </tr>
+        <tr>
+          <td style="color: #fff; font-weight: 700;">Total</td>
+          <td></td>
+          <td></td>
+          <td style="color: #fff; font-weight: 700;">~1,800&ndash;3,100</td>
+        </tr>
+      </table>
+    </div>
+
+    <p style="color: var(--text-dim); font-size: 13px;">
+      Comparable in code volume to Taproot (~3,000&ndash;5,000 lines). Simpler cryptographically &mdash;
+      no new signature schemes, mostly integer comparisons.
+      <strong>Requires a hard fork.</strong> UTXO validity rules change. This is fundamentally different
+      from Taproot's deployment (soft fork). The comparison is to implementation complexity only,
+      not deployment difficulty. A hard fork requires near-universal node upgrade &mdash;
+      a much higher coordination bar.
+    </p>
+  </section>
+
+  <!-- ========== 012: FACT AUDIT ========== -->
+  <section>
+    <div class="section-label">// 012 &mdash; fact vs. assumption</div>
+    <h2>What We Know, What We Don't</h2>
+
+    <h3>Verified Facts</h3>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Claim</th>
+          <th>Source</th>
+          <th>Status</th>
+        </tr>
+        <tr>
+          <td>3&ndash;4M BTC estimated permanently lost</td>
+          <td>Chainalysis, Unchained</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>1,720,270 BTC in P2PK (45,257 UTXOs)</td>
+          <td>Mempool.space UTXO report, block 892,385</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>~1.1M BTC attributed to Satoshi (Patoshi pattern)</td>
+          <td>Sergio Demian Lerner, 2013&ndash;2019</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>Block reward drops below 1 BTC at halving 6 (block 1,260,000)</td>
+          <td>GetBlockSubsidy() source code: 50*COIN >> 6 = 78,125,000 sat</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>P2PK exposes public key at UTXO creation</td>
+          <td>Bitcoin script specification</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>P2PK predates BIP-32 (2012) and BIP-39 (2013)</td>
+          <td>BIP publication dates</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>CRQC estimates: 2030&ndash;2040+ (wide range, no consensus)</td>
+          <td>Google: 10% by 2030, roadmap ~2029. NIST: deprecate ECC by 2030, disallow by 2035. Experts: 50%+ by 2030&ndash;2035. Skeptics: 2040+. secp256k1 needs ~500K physical qubits (Google 2025 paper).</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>nHeight stored in chainstate for every UTXO</td>
+          <td>Bitcoin Core source (struct Coin)</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>Coinbase scriptSig supports arbitrary data after BIP-34 height</td>
+          <td>BIP-34, Bitcoin Core consensus rules</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>21M cap preserved (no new coins created)</td>
+          <td>Mathematical property of the design</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>Requires hard fork</td>
+          <td>Changes UTXO validity rules</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>All Satoshi quotes used in this document</td>
+          <td>Satoshi Nakamoto Institute archive</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+        <tr>
+          <td>Similar proposals (PoAR, Issue #31941) were criticized/rejected</td>
+          <td>bitcoindev mailing list, GitHub</td>
+          <td><span class="tag tag-green">verified</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <h3>Calculations (math from estimated inputs)</h3>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Claim</th>
+          <th>Calculation</th>
+          <th>Status</th>
+        </tr>
+        <tr>
+          <td>~11,497 BTC/year donated at halving 6</td>
+          <td>0.21875 &times; 144 &times; 365</td>
+          <td><span class="tag tag-amber">math correct</span></td>
+        </tr>
+        <tr>
+          <td>50+ years of runway at initial rate</td>
+          <td>1,720,000 &divide; 11,497</td>
+          <td><span class="tag tag-amber">math correct, pool size estimated</span></td>
+        </tr>
+        <tr>
+          <td>~17M effective circulating supply</td>
+          <td>21M &minus; 3&ndash;4M lost</td>
+          <td><span class="tag tag-amber">math correct, "lost" estimated</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <h3>Unproven Assumptions</h3>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Claim</th>
+          <th>Honest Assessment</th>
+        </tr>
+        <tr>
+          <td>"Only abandoned coins are affected"</td>
+          <td><span class="tag tag-red">assumption</span> &mdash; Edge cases: imprisoned, persecuted, incapacitated P2PK holders who cannot migrate.</td>
+        </tr>
+        <tr>
+          <td>"Quantum problem solved by timing"</td>
+          <td><span class="tag tag-red">depends</span> &mdash; True only if CRQC arrives after donation trigger (~2032). Estimates range widely (2030&ndash;2040+). If CRQC arrives before trigger, exposed keys are compromised before SDP activates. SDP is a precaution, not a guarantee.</td>
+        </tr>
+        <tr>
+          <td>"1 BTC floor is the right number"</td>
+          <td><span class="tag tag-red">parameter choice</span> &mdash; Why 1 BTC and not 0.5 or 2? Requires economic modeling that doesn't exist yet.</td>
+        </tr>
+        <tr>
+          <td>"Block ~1,035,000 is the right cutoff"</td>
+          <td><span class="tag tag-red">governance decision</span> &mdash; The cutoff height is not derivable from cryptography or first principles. It is a policy parameter &mdash; a human decision about where to draw the line. This is the point where SDP crosses from cryptographic mechanism into governance. Any specific height is a tradeoff between migration window and activation timeline. The community must choose it, and that choice is inherently political.</td>
+        </tr>
+        <tr>
+          <td>"Self-selecting mechanism"</td>
+          <td><span class="tag tag-red">assumption</span> &mdash; Assumes all living P2PK holders will be aware of and able to respond to the migration requirement.</td>
+        </tr>
+        <tr>
+          <td>"Hard fork is achievable"</td>
+          <td><span class="tag tag-red">unproven</span> &mdash; Bitcoin has never executed a contentious hard fork. This is the biggest barrier.</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      This proposal has zero code, zero simulation, zero peer review, and zero BIP number.
+      It is a concept. Evaluate accordingly.
+    </div>
+  </section>
+
+  <!-- ========== 013: CRITICS vs DEFENSE ========== -->
+  <section>
+    <div class="section-label">// 013 &mdash; anticipated objections</div>
+    <h2>Critics &amp; Defense</h2>
+
+    <p>Fair objections deserve honest answers.</p>
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th style="width: 35%;">Objection</th>
+          <th style="width: 65%;">Defense</th>
+        </tr>
+        <tr>
+          <td style="color: var(--red); font-weight: 700;">"This is confiscation."</td>
+          <td>
+            Ownership is not revoked. Spendability is conditional on cryptographic security assumptions.
+            P2PK keys are exposed on-chain &mdash; if ECDSA degrades, the private key is derivable by anyone.
+            SDP provides a multi-year key-rotation window. One transaction to a safe address preserves
+            ownership forever.
+          </td>
+        </tr>
+        <tr>
+          <td style="color: var(--red); font-weight: 700;">"The core design was set in stone. You can't change consensus rules."</td>
+          <td>
+            Satoshi changed consensus rules himself.
+            Block 74,638 created 184 billion BTC from an overflow bug.
+            He published v0.3.10 within 5 hours and reorged the chain.
+            He added the 1MB limit, OP_NOP codes, the alert system &mdash; all after v0.1.
+            "Set in stone" meant 21M, PoW, P2P. SDP preserves all of them.
+          </td>
+        </tr>
+        <tr>
+          <td style="color: var(--red); font-weight: 700;">"Bitcoin has never done a contentious hard fork."</td>
+          <td>
+            True. This is the biggest barrier. Bitcoin has forked before (value overflow, 2010),
+            but never contentiously. SDP does not force activation. If miners reject it, it doesn't happen.
+            <em>"Any needed rules and incentives can be enforced with this consensus mechanism."</em>
+          </td>
+        </tr>
+        <tr>
+          <td style="color: var(--red); font-weight: 700;">"This sets a dangerous precedent."</td>
+          <td>
+            The condition is cryptographically specific: public key on-chain or not. Binary, deterministic,
+            verifiable by any node. SDP Phase 1 targets only P2PK &mdash; a fixed, shrinking set.
+            Extending to quantum-safe types would require an entirely different technical justification
+            and separate consensus. The mechanism is exhausted once P2PK is addressed.
+          </td>
+        </tr>
+        <tr>
+          <td style="color: var(--red); font-weight: 700;">"What about holders who can't migrate?"</td>
+          <td>
+            Valid concern. But these holders face the same cryptographic degradation with or without SDP.
+            Their public keys are exposed. Without SDP, those keys are exploitable by any adversary
+            with a CRQC. Pre-signed time-locked migrations and multisig estate plans can mitigate this.
+          </td>
+        </tr>
+        <tr>
+          <td style="color: var(--red); font-weight: 700;">"The 21M cap is sacred. Don't touch the supply."</td>
+          <td>
+            Zero new coins are created. <code>MAX_MONEY</code> stays at 2,100,000,000,000,000 satoshis.
+            Existing coins move, nothing is minted. Satoshi:
+            <em>"Once a predetermined number of coins have entered circulation, the incentive
+            can transition entirely to transaction fees and be completely inflation free."</em>
+            Same coins, different hands.
+          </td>
+        </tr>
+        <tr>
+          <td style="color: var(--red); font-weight: 700;">"Miners shouldn't get free coins."</td>
+          <td>
+            Miners provide the proof-of-work security budget. Satoshi designed block rewards for this:
+            <em>"The incentive may help encourage nodes to stay honest."</em>
+            The alternative is that coins with degraded cryptographic protection are exploited by
+            the first adversary with a CRQC.
+          </td>
+        </tr>
+        <tr>
+          <td style="color: var(--red); font-weight: 700;">"Transaction fees will be sufficient. No supplemental reward needed."</td>
+          <td>
+            Satoshi expected this. SDP doesn't contradict it &mdash; fees stay primary.
+            The donation is a supplement that halves geometrically (5.3% of pool ever used).
+            If fees are sufficient, the donation is negligible. If they're not,
+            it's a safety net.
+          </td>
+        </tr>
+        <tr>
+          <td style="color: var(--red); font-weight: 700;">"Only 5.3% of the pool is used. What's the point?"</td>
+          <td>
+            5.3% = ~91,875 BTC spread across all future eras. Small per block, but perpetual.
+            The signal to miners matters as much as the amount. And the geometric decay
+            mirrors Bitcoin's own emission schedule.
+          </td>
+        </tr>
+        <tr>
+          <td style="color: var(--red); font-weight: 700;">"If Satoshi returns?"</td>
+          <td>
+            Key rotation: one transaction to a quantum-safe address. Coins preserved forever.
+            If keys are lost, the exposed public keys face the same ECDSA degradation as any other P2PK.
+            The opt-out is available to any keyholder.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <h3>The Value Overflow Precedent</h3>
+
+    <div class="callout">
+      <strong>August 15, 2010 &mdash; Block 74,638</strong><br><br>
+      A transaction created <strong>184,467,440,737 BTC</strong> from an integer overflow bug.
+      Jeff Garzik discovered it. Satoshi Nakamoto published Bitcoin v0.3.10 within
+      <strong>5 hours</strong>. The network reorganized to a clean chain by block 74,691.
+      <br><br>
+      This was a <strong>consensus-breaking change</strong> coordinated by Bitcoin's creator.
+      He didn't say "the code is set in stone, we must accept 184 billion BTC."
+      He fixed the problem. Because <em>"any needed rules and incentives can be
+      enforced with this consensus mechanism."</em>
+      <br><br>
+      Bitcoin survived. The price went from $0.07 to $0.30 by year's end &mdash;
+      a 300% increase after the fix. The market rewarded decisive action.
+      <cite>&mdash; Bitcoin Wiki, "Value overflow incident"; Satoshi Nakamoto Institute, thread #186</cite>
+    </div>
+
+    <p style="color: var(--text-dim); font-size: 13px;">
+      The overflow fix proves three things: rules can change when the threat is real,
+      Satoshi initiated such changes himself, and the market rewarded it.
+      Different threat (quantum, not overflow). Same principle.
+    </p>
+  </section>
+
+  <!-- ========== 014: PROPOSED TIMELINE ========== -->
+  <section>
+    <div class="section-label">// 014 &mdash; proposed timeline</div>
+    <h2>Proposed Timeline</h2>
+
+    <p>
+      There's no rush. The donation doesn't activate until the subsidy drops below 1 BTC,
+      around 2032. That gives roughly six years to discuss, review, implement, test, and
+      let miners decide. The timeline below is a reasonable sequence, not a promise.
+    </p>
+
+    <div style="position: relative; padding-left: 32px; border-left: 2px solid var(--orange);">
+
+      <div style="margin-bottom: 28px; position: relative;">
+        <div style="position: absolute; left: -41px; width: 18px; height: 18px; background: var(--orange); border-radius: 50%; border: 2px solid var(--bg);"></div>
+        <div style="color: var(--orange); font-weight: bold; font-size: 14px; margin-bottom: 4px;">Concept &amp; Discussion (2026)</div>
+        <p style="font-size: 13px; color: var(--text-dim); margin: 0;">
+          Publish the proposal. Post it to the bitcoindev mailing list and let people pick it apart.
+          If the idea has a fatal flaw, this is where it dies. That's fine. Better to find out now.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 28px; position: relative;">
+        <div style="position: absolute; left: -41px; width: 18px; height: 18px; background: var(--orange); border-radius: 50%; border: 2px solid var(--bg);"></div>
+        <div style="color: var(--orange); font-weight: bold; font-size: 14px; margin-bottom: 4px;">BIP Draft &amp; Review (2027)</div>
+        <p style="font-size: 13px; color: var(--text-dim); margin: 0;">
+          If the concept survives discussion, write a formal BIP. The consensus rules need independent
+          security review. The donation logic needs to be verified, not just tested. Miners and pool
+          operators should weigh in on the game theory. This takes time. It should.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 28px; position: relative;">
+        <div style="position: absolute; left: -41px; width: 18px; height: 18px; background: var(--orange); border-radius: 50%; border: 2px solid var(--bg);"></div>
+        <div style="color: var(--orange); font-weight: bold; font-size: 14px; margin-bottom: 4px;">Reference Implementation (2027&ndash;2028)</div>
+        <p style="font-size: 13px; color: var(--text-dim); margin: 0;">
+          Write the code. Open a Bitcoin Core pull request. The changes are small &mdash;
+          a few hundred lines touching validation, block reward calculation, and coinbase serialization.
+          The test suite matters more than the implementation itself.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 28px; position: relative;">
+        <div style="position: absolute; left: -41px; width: 18px; height: 18px; background: var(--orange); border-radius: 50%; border: 2px solid var(--bg);"></div>
+        <div style="color: var(--orange); font-weight: bold; font-size: 14px; margin-bottom: 4px;">Testnet (2028&ndash;2029)</div>
+        <p style="font-size: 13px; color: var(--text-dim); margin: 0;">
+          Run it on testnet and signet. Simulate multiple halving eras. Make sure the donation halving
+          decays correctly, the pool accounting holds up, and nothing breaks at the edges.
+          Let it run long enough that people can see it working, or see it fail.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 28px; position: relative;">
+        <div style="position: absolute; left: -41px; width: 18px; height: 18px; background: var(--orange); border-radius: 50%; border: 2px solid var(--bg);"></div>
+        <div style="color: var(--orange); font-weight: bold; font-size: 14px; margin-bottom: 4px;">Miner Signaling &amp; Activation (2030&ndash;2031)</div>
+        <p style="font-size: 13px; color: var(--text-dim); margin: 0;">
+          This is where it either happens or doesn't. Miners signal support through version bits,
+          same mechanism as SegWit. If 95% of blocks in a retarget period signal yes, it locks in.
+          If they don't, it doesn't. Nobody can force this. That's the point.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 8px; position: relative;">
+        <div style="position: absolute; left: -41px; width: 18px; height: 18px; background: var(--green); border-radius: 50%; border: 2px solid var(--bg);"></div>
+        <div style="color: var(--green); font-weight: bold; font-size: 14px; margin-bottom: 4px;">Donation Begins (Block 1,260,000, ~2032)</div>
+        <p style="font-size: 13px; color: var(--text-dim); margin: 0;">
+          The subsidy drops to 0.78125 BTC. The gap appears. The first donation fills it &mdash;
+          0.21875 BTC from the pool to the miner. Recorded in the coinbase, like the genesis message.
+          From here, it halves every 210,000 blocks and never stops.
+        </p>
+      </div>
+
+    </div>
+
+    <p style="color: var(--text-dim); margin-top: 24px; font-size: 12px; border-top: 1px solid #333; padding-top: 16px;">
+      Dates are approximate. Nothing moves forward without consensus.
+      If it takes longer, it takes longer.
+    </p>
+
+    <h3>Deployment &amp; Consensus Considerations</h3>
+
+    <p>SDP requires a hard fork. This should not be hidden or minimized.</p>
+
+    <p>Bitcoin has never executed a contentious hard fork. The value overflow fix (2010) was
+    a consensus-breaking change, but it was uncontroversial &mdash; the bug was unambiguously harmful.
+    SDP's justification (preempting quantum exposure) is less clear-cut. Reasonable people disagree
+    on quantum timelines, on whether fees alone will suffice, and on whether any UTXO-touching rule
+    change is acceptable.</p>
+
+    <p>For this reason, SDP requires:</p>
+    <p style="color: var(--text-dim); font-size: 13px;">
+      &bull; Broad agreement among developers, miners, node operators, and economic stakeholders<br>
+      &bull; A long activation horizon (years, not months)<br>
+      &bull; BIP-9 style miner signaling with a high threshold (95%)<br>
+      &bull; Possible phased deployment: P2PK first, with separate consensus for any extension<br>
+      &bull; A community-defined expiry: if the BIP does not activate within N retarget periods, it expires
+    </p>
+
+    <p style="color: var(--text-dim); font-size: 13px;">
+      If the community rejects SDP, it does not activate. That is the system working as designed.
+      This proposal is a starting point for discussion, not a predetermined outcome.
+    </p>
+  </section>
+
+  <!-- ========== VERDICT ========== -->
+  <section class="verdict">
+    <div class="section-label">// the shift</div>
+    <h2>Nothing Lost Forever</h2>
+
+    <p class="verdict-line">
+      Outputs secured under degraded cryptographic assumptions face two futures:
+      exploited by an adversary, or frozen indefinitely.
+    </p>
+    <p class="verdict-line">
+      SDP defines a third:
+      <strong style="color: var(--orange);">remaining value integrates into the security budget that protects everyone.</strong>
+    </p>
+    <p class="verdict-line" style="color: var(--text-dim); margin-top: 24px;">
+      If no cryptographic break occurs, no additional value enters circulation.
+      Triggered when needed. Scoped to P2PK. Key rotation preserves ownership.
+      Recorded in every block.
+    </p>
+
+    <p class="verdict-final">
+      "Think of it as a donation to everyone."<br>
+      &mdash; Satoshi Nakamoto
+    </p>
+
+    <p style="color: var(--text-dim); font-size: 13px; margin-top: 40px;">
+      Quantum-safe holders are never touched. The 21M cap is never violated.
+      Spendability becomes conditional on cryptographic integrity &mdash; nothing more.
+    </p>
+  </section>
+
+  <!-- ========== REFERENCES ========== -->
+  <section>
+    <div class="section-label">// references</div>
+    <h2>References</h2>
+
+    <ol style="font-size: 13px; line-height: 1.8; color: var(--text-dim); padding-left: 24px;">
+      <li>Chainalysis, "Bitcoin's Lost Coins." Unchained Capital, "How Many Bitcoin Are Lost?" 2023.</li>
+      <li>Mempool.space, "UTXO Type Distribution" and UTXO Set Report, block 892,385, 2026.</li>
+      <li>Google Quantum AI, Willow chip (105 qubits, 2024); roadmap targets error-corrected QC ~2029. Google (2025): secp256k1 breakable with &lt;500K physical qubits. NIST IR 8547: deprecate ECC by 2030, disallow by 2035. F. Valsorda, "A Cryptography Engineer's Perspective on Quantum Computing Timelines," 2026.</li>
+      <li>S. Nakamoto, BitcoinTalk forum, February 14, 2010.</li>
+      <li>PoAR, "Proof-of-Activity Reclamation," GitHub Gist, 2025. bitcoindev mailing list discussion.</li>
+      <li>Bitcoin Core Issue #31941, "Proposal for Bitcoin Expiration Mechanism," GitHub, 2025.</li>
+      <li>Freicoin, "Bitcoin with demurrage," freico.in, 2012.</li>
+      <li>BIP-361, "Post-Quantum Migration and Legacy Signature Sunset," Lopp, Papathanasiou, Smith, Ross, Vaile, Dallaire-Demers. Assigned Feb 2026, merged Apr 2026.</li>
+      <li>N. Szabo, "Trusted Third Parties Are Security Holes," 2001.</li>
+      <li>S. Nakamoto, "Bitcoin: A Peer-to-Peer Electronic Cash System," 2008.</li>
+      <li>S. D. Lerner, "The Patoshi Mining Pattern," 2013&ndash;2019.</li>
+      <li>Bitcoin Core source: GetBlockSubsidy(), consensus/amount.h (MAX_MONEY), struct Coin (nHeight).</li>
+      <li>BIP-34, "Block v2, Height in Coinbase," 2012.</li>
+      <li>Bitcoin Wiki, "Value overflow incident," block 74,638, August 15, 2010. Satoshi Nakamoto Institute, thread #186.</li>
+    </ol>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div>Zipherpunks &mdash; April 2026</div>
+    <div class="note">
+      A proposal for discussion. All on-chain data sourced from Chainalysis, Mempool.space,
+      and publicly available blockchain research. Satoshi quotes verified via
+      the Satoshi Nakamoto Institute. Prior proposals referenced from bitcoindev mailing list
+      and GitHub.
+      <br><br>
+      "Any needed rules and incentives can be enforced with this consensus mechanism."
+      <br>
+      &mdash; Satoshi Nakamoto, Bitcoin Whitepaper, Conclusion
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

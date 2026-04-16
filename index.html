@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZipherPunk - Zclassic Privacy Advocacy & ZipherX Wallets</title>
-    <meta name="description" content="ZipherPunk is the cypherpunk hub for Zclassic (ZCL). Download ZipherX privacy wallets for macOS, iOS, Android, Linux & Windows. Shielded-only zk-SNARK transactions. Built by VicThor2013.">
+    <title>ZipherPunk - Cypherpunk Research & Privacy Advocacy</title>
+    <meta name="description" content="ZipherPunk is a cypherpunk research hub. Bitcoin proposals, cryptographic analysis, privacy advocacy, and Zclassic (ZCL) wallet development. Built by VicThor2013.">
     <meta name="keywords" content="ZipherPunk, Zclassic, ZCL, ZipherX, privacy wallet, cryptocurrency, zk-SNARKs, shielded transactions, cypherpunk, Tor, zero-knowledge proof, crypto wallet, decentralized, open source">
     <meta name="author" content="VicThor2013">
     <meta name="robots" content="index, follow">
@@ -17,8 +17,8 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://zipherpunk.com/">
-    <meta property="og:title" content="ZipherPunk - Zclassic Privacy Advocacy & ZipherX Wallets">
-    <meta property="og:description" content="Cypherpunk hub for Zclassic (ZCL). Download ZipherX shielded-only wallets. zk-SNARK privacy. No trusted servers. Built by VicThor2013.">
+    <meta property="og:title" content="ZipherPunk - Cypherpunk Research & Privacy Advocacy">
+    <meta property="og:description" content="Cypherpunk research hub. Bitcoin proposals, cryptographic analysis, privacy advocacy. Built by VicThor2013.">
     <meta property="og:image" content="https://zipherpunk.com/og-home.png">
     <meta property="og:site_name" content="ZipherPunk">
 
@@ -26,8 +26,8 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@VicThor2013">
     <meta name="twitter:creator" content="@VicThor2013">
-    <meta name="twitter:title" content="ZipherPunk - Zclassic Privacy Advocacy & ZipherX Wallets">
-    <meta name="twitter:description" content="Cypherpunk hub for Zclassic (ZCL). Download ZipherX shielded-only wallets. zk-SNARK privacy. No trusted servers. Built by VicThor2013.">
+    <meta name="twitter:title" content="ZipherPunk - Cypherpunk Research & Privacy Advocacy">
+    <meta name="twitter:description" content="Cypherpunk research hub. Bitcoin proposals, cryptographic analysis, privacy advocacy. Built by VicThor2013.">
     <meta name="twitter:image" content="https://zipherpunk.com/og-home.png">
 
     <!-- Structured Data -->
@@ -41,7 +41,7 @@
           "name": "ZipherPunk",
           "url": "https://zipherpunk.com",
           "logo": "https://zipherpunk.com/Zipherpunk_logo.png",
-          "description": "Cypherpunk privacy advocacy and wallet development for Zclassic (ZCL)",
+          "description": "Cypherpunk research hub: Bitcoin proposals, cryptographic analysis, privacy advocacy",
           "founder": {
             "@type": "Person",
             "name": "VicThor2013",
@@ -62,27 +62,13 @@
           "name": "ZipherPunk",
           "url": "https://zipherpunk.com",
           "publisher": { "@id": "https://zipherpunk.com/#org" },
-          "description": "Privacy advocacy, cryptographic research, and wallet development for Zclassic (ZCL)"
+          "description": "Cypherpunk research hub: Bitcoin proposals, cryptographic analysis, privacy advocacy"
         },
         {
-          "@type": "SoftwareApplication",
-          "name": "ZipherX",
-          "applicationCategory": "FinanceApplication",
-          "operatingSystem": "macOS, iOS, Android, Linux, Windows",
-          "description": "Shielded-only Zclassic (ZCL) wallet with embedded Tor, zk-SNARK proofs, and Secure Enclave key protection. No trusted servers.",
-          "url": "https://zipherpunk.com/ZipherX.html",
-          "downloadUrl": "https://github.com/ZipherPunk/ZipherX/releases/latest",
-          "softwareVersion": "v2.1.62",
-          "author": {
-            "@type": "Person",
-            "name": "VicThor2013"
-          },
-          "license": "https://opensource.org/licenses/MIT",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
-          }
+          "@type": "WebPage",
+          "name": "ZipherPunk Research",
+          "description": "Cypherpunk research: Bitcoin proposals, cryptographic analysis, privacy advocacy",
+          "url": "https://zipherpunk.com"
         }
       ]
     }
@@ -195,37 +181,6 @@
             text-align: center;
         }
 
-        .stats-box {
-            border: 2px groove #808080;
-            padding: 12px;
-            margin: 16px 0;
-            background: #e8e8e8;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 8px;
-            border: 1px solid #000;
-            background: #fff;
-        }
-
-        .stat-label {
-            font-size: 10px;
-            text-transform: uppercase;
-        }
-
-        .stat-value {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 4px;
-        }
-
         .wallet-section {
             border: 2px solid #000;
             margin: 16px 0;
@@ -300,22 +255,6 @@
             border: 1px solid #000;
         }
 
-        .loading {
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            50% { opacity: 0.5; }
-        }
-
-        .scroll-box {
-            border: 2px inset #808080;
-            padding: 8px;
-            max-height: 200px;
-            overflow-y: auto;
-            background: #fff;
-        }
-
         .download-section {
             text-align: center;
             margin: 20px 0;
@@ -324,9 +263,6 @@
         @media (max-width: 600px) {
             .principles {
                 grid-template-columns: 1fr;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
             }
         }
     </style>
@@ -375,119 +311,21 @@
                 </div>
             </div>
 
-            <h2>▸ Zclassic Network Stats</h2>
-            <div class="stats-box">
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-label">Block Height</div>
-                        <div class="stat-value loading" id="block-height">loading</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">ZCL Price</div>
-                        <div class="stat-value loading" id="zcl-price">loading</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Version</div>
-                        <div class="stat-value" id="version">v2.1.62</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Circulating</div>
-                        <div class="stat-value loading" id="circulating" style="font-size: 12px;">loading</div>
-                    </div>
-                </div>
-            </div>
-
-            <h2>▸ ZIPHERX - macOS Full Node Wallet</h2>
-            <div class="wallet-section">
-                <div class="wallet-header">◈ Desktop Sovereignty</div>
-                <p>Embedded full node. Local proof verification. Zero trusted servers.</p>
-                <ul class="feature-list">
-                    <li><strong>Embedded Full Node:</strong> Bundled zclassicd - complete blockchain verification</li>
-                    <li><strong>Shielded Only:</strong> z-address transactions only - maximum privacy</li>
-                    <li><strong>Sapling Proofs:</strong> zk-SNARK generation on-device (~30 seconds)</li>
-                    <li><strong>Multi-Peer Consensus:</strong> 8+ peers, 5/8 Byzantine fault tolerance</li>
-                    <li><strong>Tor Privacy:</strong> Embedded Arti router with hidden service support</li>
-                    <li><strong>Equihash Verification:</strong> Full proof-of-work block validation</li>
-                    <li><strong>512-byte Memos:</strong> Encrypted messages in every transaction</li>
-                    <li><strong>BIP-39 Recovery:</strong> 24-word seed phrase backup</li>
-                    <li><strong>Open Source:</strong> MIT License - audit the code yourself</li>
-                </ul>
-                <p style="font-size: 10px; margin-top: 12px; font-style: italic;">
-                    "Privacy is not about something to hide. Privacy is about something to protect." — Your keys, your coins, your rules.
-                </p>
-                <div class="download-section">
-                    <a href="https://github.com/ZipherPunk/ZipherX/releases/latest" class="button download-btn" target="_blank">⬇ Download ZipherX Mac</a>
-                    <a href="https://github.com/ZipherPunk/ZipherX" class="button" target="_blank">◆ Source Code</a>
-                </div>
-            </div>
-
-            <h2>▸ ZIPHERX - iOS Wallet (Experimental)</h2>
-            <div class="wallet-section">
-                <div class="wallet-header">◈ Privacy On The Go</div>
-                <p><strong>WARNING:</strong> Experimental software. Educational purposes only.</p>
-                <p>Your keys in Secure Enclave. Your proofs generated locally. Zero trust.</p>
-                <ul class="feature-list">
-                    <li><strong>Shielded Only:</strong> z-address transactions only - no transparent leaks</li>
-                    <li><strong>Secure Enclave:</strong> Hardware-backed key protection (iPhone 8+)</li>
-                    <li><strong>Local Proof Generation:</strong> Sapling zk-SNARKs on-device (~30s)</li>
-                    <li><strong>Multi-Peer Consensus:</strong> 8+ peers with 5/8 Byzantine tolerance</li>
-                    <li><strong>Embedded Tor:</strong> Arti router with .onion hidden service</li>
-                    <li><strong>Parallel Decryption:</strong> 6.7x faster note scanning via Rayon</li>
-                    <li><strong>Biometric Auth:</strong> Face ID/Touch ID with auto-lock timeout</li>
-                    <li><strong>Pre-indexed Tree:</strong> ~1M commitment tree for instant balance</li>
-                    <li><strong>BIP-39 Recovery:</strong> 24-word seed phrase backup</li>
-                    <li><strong>Cypherpunk Chat:</strong> P2P encrypted messaging over Tor with in-chat payments</li>
-                    <li><strong>Retro UI:</strong> System 7 theme meets modern crypto</li>
-                </ul>
-                <p style="font-size: 10px; margin-top: 12px; font-style: italic;">
-                    "Don't trust, verify." - Local proofs. Multi-peer consensus. Zero trusted servers.
-                </p>
-                <div class="download-section">
-                    <a href="https://testflight.apple.com/join/ZCzZRdaZ" class="button download-btn" target="_blank">⬇ Join iOS Beta (TestFlight)</a>
-                    <a href="https://github.com/ZipherPunk/ZipherX" class="button" target="_blank">◆ Source Code</a>
-                    <a href="ZipherX.html" class="button" target="_blank">Learn More</a>
-                </div>
-            </div>
-
-            <h2>▸ ZIPHERX MULTI - Cross-Platform Wallet</h2>
-            <div class="wallet-section">
-                <div class="wallet-header">◈ Privacy Everywhere — Android, macOS, Linux, Windows</div>
-                <div style="border: 2px inset #808080; padding: 8px; margin-bottom: 12px; background: #fff8e0;">
-                    <p style="font-size: 11px; font-weight: bold; color: #8b6914;">&#9888; BETA VERSION — LIMITED TESTING</p>
-                    <p style="font-size: 10px; line-height: 1.5; color: #666;">This is beta software with limited real-world testing. Use at your own risk. Always back up your private key / mnemonic phrase. Not recommended for large amounts. Report bugs on <a href="https://github.com/ZipherPunk/zipherx_multi/issues" target="_blank">GitHub</a>.</p>
-                </div>
-                <p>Native multi-platform Zclassic wallet. Rust core with platform-native UI. No trusted servers.</p>
-                <ul class="feature-list">
-                    <li><strong>Sapling Shielded:</strong> z-address only — full zk-SNARK privacy on every platform</li>
-                    <li><strong>Native Desktop (egui):</strong> Single binary, no JVM — direct Rust performance</li>
-                    <li><strong>Android:</strong> Material 3 UI with Jetpack Compose, biometric auth</li>
-                    <li><strong>Autonomous Sync:</strong> Background sync keeps wallet up-to-date automatically</li>
-                    <li><strong>Full Node Mode:</strong> Connect to your own zclassicd (desktop only)</li>
-                    <li><strong>Tor Privacy:</strong> Optional Tor routing for network-level anonymity</li>
-                    <li><strong>Secure Storage:</strong> Argon2id + AES-256-GCM encrypted wallet data</li>
-                    <li><strong>BIP-39 Recovery:</strong> 24-word seed phrase backup</li>
-                    <li><strong>Open Source:</strong> MIT License — audit the code yourself</li>
-                </ul>
-                <p style="font-size: 10px; margin-top: 12px; font-style: italic;">
-                    "Your keys, your coins, your platform." — Privacy should not depend on what device you use.
-                </p>
-                <div class="download-section">
-                    <a href="https://github.com/ZipherPunk/zipherx_multi/releases/latest/download/zipherx-gui-macos-arm64" class="button download-btn" target="_blank">&#11015; macOS (Apple Silicon)</a>
-                    <a href="https://github.com/ZipherPunk/zipherx_multi/releases/latest/download/ZipherX-0.1.0-release.apk" class="button download-btn" target="_blank">&#11015; Android APK</a>
-                    <a href="https://github.com/ZipherPunk/zipherx_multi/releases/latest/download/zipherx-cli-windows-x86_64.exe" class="button download-btn" target="_blank">&#11015; Windows CLI</a>
-                </div>
-                <div class="download-section" style="margin-top: 4px;">
-                    <a href="https://github.com/ZipherPunk/zipherx_multi" class="button" target="_blank">&#9670; Source Code</a>
-                    <a href="https://github.com/ZipherPunk/zipherx_multi/releases/latest" class="button" target="_blank">&#9670; All Releases</a>
-                </div>
-                <div style="border-top: 1px dotted #999; margin-top: 12px; padding-top: 8px;">
-                    <p style="font-size: 10px;"><strong>Linux / Windows Desktop:</strong> Build from source — requires Rust 1.75+</p>
-                    <p style="font-size: 10px; font-family: monospace; background: #f0f0f0; padding: 4px 8px; margin: 4px 0;">git clone https://github.com/ZipherPunk/zipherx_multi.git && cd zipherx_multi && cargo build --release -p zipherx-gui</p>
-                    <p style="font-size: 9px; color: #666;">Linux deps: <span style="font-family: monospace;">apt install build-essential pkg-config libssl-dev libfontconfig1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev</span></p>
-                </div>
-            </div>
-
             <h2>▸ Research &amp; Analysis</h2>
+            <div class="wallet-section" style="border-color: #f7931a;">
+                <div class="wallet-header" style="background: #f7931a;">◈ NEW — Bitcoin Research</div>
+                <p><strong>Satoshi's Donation Protocol (SDP)</strong> — A consensus-layer mechanism that restricts spendability of quantum-vulnerable P2PK outputs (1,720,270 BTC across 45,257 UTXOs with public keys exposed on-chain since 2009–2012). Activates only after block subsidy drops below 1 BTC (halving 6, ~2032). If no cryptographic break occurs, no additional value enters circulation.</p>
+                <ul class="feature-list">
+                    <li><strong>Scope:</strong> Only P2PK with exposed public keys. P2PKH, P2SH, Taproot, and PQC holders are never affected.</li>
+                    <li><strong>Key-rotation window:</strong> Any living P2PK holder can opt out with one transaction before block ~1,035,000 (~Jan 3, 2028). Ownership preserved forever.</li>
+                    <li><strong>Economic trigger:</strong> Donation does not activate until <code>GetBlockSubsidy() &lt; 1 BTC</code> (halving 6, ~2032). Before that, nothing changes.</li>
+                    <li><strong>Dormant unless needed:</strong> If quantum never arrives, the pool never activates. Contingency, not prediction.</li>
+                    <li><strong>21M cap preserved.</strong> MAX_MONEY unchanged. Zero new coins.</li>
+                </ul>
+                <div class="download-section">
+                    <a href="bitcoin-satoshi-donation-protocol-whitepaper.pdf" class="button" style="border-color: #f7931a;">Read Whitepaper (PDF)</a>
+                </div>
+            </div>
             <div class="wallet-section">
                 <div class="wallet-header">◈ Cryptographic Research</div>
                 <p>In-depth technical analysis of Zclassic's cryptographic primitives, threat models, and upgrade paths.</p>
@@ -499,13 +337,14 @@
                 </div>
             </div>
 
-            <h2>▸ Why Zclassic?</h2>
-            <div class="scroll-box">
-                <p><strong>No Founder's Reward.</strong> 100% of block rewards go to miners. No dev tax. No corporate interests.</p>
-                <p><strong>True Privacy.</strong> zk-SNARKs zero-knowledge proofs. Shielded transactions hide sender, receiver, and amount.</p>
-                <p><strong>Decentralized.</strong> No company. No foundation. Community-driven development.</p>
-                <p><strong>Battle-tested.</strong> Based on Zcash protocol. Years of cryptographic research.</p>
-                <p><strong>Censorship Resistant.</strong> No one can stop your transaction. No one can freeze your funds.</p>
+            <h2>▸ Zclassic (ZCL)</h2>
+            <div class="wallet-section">
+                <div class="wallet-header">&#9672; Privacy Coin — No Founder's Reward</div>
+                <p>Zclassic is a community-driven privacy coin based on the Zcash protocol. 100% of block rewards go to miners. zk-SNARK shielded transactions. No dev tax. No corporate interests.</p>
+                <p>ZipherX wallets available for macOS, iOS, Android, Linux & Windows.</p>
+                <div class="download-section">
+                    <a href="zclassic.html" class="button">Zclassic — Wallets, Stats & Downloads</a>
+                </div>
             </div>
 
             <div style="border: 2px inset #808080; padding: 10px; margin: 16px 0; background: #f8f0f0;">
@@ -514,100 +353,16 @@
             </div>
 
             <div class="footer">
-                <p>ZipherPunk.com — Supporting Privacy Since Day One</p>
-                <p>Zclassic (ZCL) • DYOR • Not Financial Advice</p>
+                <p>ZipherPunk.com — Cypherpunk Research &amp; Privacy Advocacy</p>
                 <p style="margin-top: 8px;">
                     [ <a href="https://x.com/VicThor2013" target="_blank">@VicThor2013</a> |
                     <a href="https://x.com/ZipherPunk" target="_blank">@ZipherPunk</a> |
                     <a href="https://github.com/ZipherPunk" target="_blank">GitHub</a> |
-                    <a href="https://zclassic.org" target="_blank">zclassic.org</a> |
                     <a href="https://github.com/ZipherPunk/zipherpunk" target="_blank">Source</a> ]
                 </p>
             </div>
         </div>
     </div>
 
-    <script>
-
-        // Retry state
-        let supplyLoaded = false;
-        let priceLoaded = false;
-        let blockHeightLoaded = false;
-        let retryCount = 0;
-
-        // Fetch block height from Zelcore explorer
-        async function fetchBlockHeight() {
-            try {
-                const response = await fetch('https://explorer.zcl.zelcore.io/api/sync');
-                const data = await response.json();
-
-                if (data.height) {
-                    document.getElementById('block-height').textContent = data.height.toLocaleString();
-                    document.getElementById('block-height').classList.remove('loading');
-                    blockHeightLoaded = true;
-                }
-            } catch (error) {
-                console.error('Error fetching block height:', error);
-            }
-        }
-
-        // Fetch price and supply from CoinGecko
-        async function fetchStats() {
-            try {
-                const response = await fetch('https://api.coingecko.com/api/v3/coins/zclassic?localization=false&tickers=false&community_data=false&developer_data=false');
-                const data = await response.json();
-
-                // Update price
-                if (data.market_data && data.market_data.current_price && data.market_data.current_price.usd) {
-                    document.getElementById('zcl-price').textContent = '$' + data.market_data.current_price.usd.toFixed(4);
-                    document.getElementById('zcl-price').classList.remove('loading');
-                    priceLoaded = true;
-                }
-
-                // Update circulating supply
-                if (data.market_data && data.market_data.circulating_supply) {
-                    const circulating = Math.floor(data.market_data.circulating_supply).toLocaleString();
-                    document.getElementById('circulating').textContent = circulating + ' ZCL';
-                    document.getElementById('circulating').classList.remove('loading');
-                    supplyLoaded = true;
-                }
-            } catch (error) {
-                console.error('Error fetching data from CoinGecko:', error);
-            }
-        }
-
-        // Retry logic with progressive delays
-        async function retryFetch() {
-            await Promise.all([fetchStats(), fetchBlockHeight()]);
-
-            if (supplyLoaded && priceLoaded && blockHeightLoaded) {
-                // Success - switch to 10 minute refresh
-                setInterval(() => {
-                    fetchStats();
-                    fetchBlockHeight();
-                }, 600000);
-                return;
-            }
-
-            retryCount++;
-            let delay;
-
-            if (retryCount <= 10) {
-                // First 10 retries: every 5 seconds
-                delay = 5000;
-            } else if (retryCount <= 20) {
-                // Next 10 retries: every 30 seconds
-                delay = 30000;
-            } else {
-                // After that: every minute
-                delay = 60000;
-            }
-
-            setTimeout(retryFetch, delay);
-        }
-
-        // Load stats on page load
-        document.addEventListener('DOMContentLoaded', retryFetch);
-    </script>
 </body>
 </html>
